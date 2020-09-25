@@ -1,0 +1,60 @@
+{extend name='admin@main'}
+
+{block name="button"}
+
+{if auth("exam/feedback/remove")}
+<button data-action='{:url("remove")}' data-rule="id#{key}" class='layui-btn layui-btn-sm layui-btn-primary'>删除留言</button>
+{/if}
+
+{/block}
+
+{block name="content"}
+<div class="think-box-shadow">
+    {include file='term/search'}
+    <table class="layui-table margin-top-10" lay-skin="line">
+        {notempty name='list'}
+        <thead>
+        <tr>
+            <th class='list-table-check-td think-checkbox'>
+                <input data-auto-none data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class='text-center nowrap'>留言人</th>
+            <th class='text-center nowrap'>IP</th>
+            <th class='text-center nowrap'>电话</th>
+            <th class='text-center nowrap'>留言</th>
+            <th class='text-center nowrap'>留言时间</th>
+            <th class="text-center">是否回复</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        {/notempty}
+        <tbody>
+        {foreach $list as $key=>$vo}
+        <tr data-dbclick>
+            <td class='list-table-check-td think-checkbox'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class='text-center nowrap'>{$vo.name|default=''}</td>
+            <td class='text-center nowrap'>{$vo.ip|default=''}</td>
+            <td class='text-center nowrap'>{$vo.tel|default=''}</td>
+            <td class='text-center nowrap'>{$vo.remake|default=''}</td>
+            <td class='text-center nowrap'>{$vo.create_at|format_datetime}</td>
+            <td class='text-center nowrap'>
+                {eq name='vo.isReply' value='1'}已回复{else}未回复{/eq}<br>
+            </td>
+            <td class='text-center nowrap'>
+
+                {if auth("exam/feedback/edit")}
+                <a data-dbclick data-title="回复留言 " class="layui-btn layui-btn-xs" data-modal='{:url("edit")}?id={$vo.id}'>回复</a>
+                {/if}
+
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {empty name='list'}<span class="notdata">没有记录哦</span>{else}
+    {$pagehtml|raw|default=''}
+    {/empty}
+</div>
+{/block}

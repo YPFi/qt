@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>重置密码</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/resetpwd.css" />
+    <script src="__STATIC__/index/js/modal_dialog.js"></script>
+    <script src="__STATIC__/index/js/check.js"></script>
+</head>
+
+<body>
+    <div class="shadow mb-5 bg-light rounded login-top">
+        <div class="head">
+            <img src="__STATIC__/index/images/logo.png"><span>
+                <h1>·</h1>重置密码
+            </span>
+        </div>
+    </div>
+    <div class="reset-box">
+        <div class="container">
+            <div class="row">
+                <div class="col" style="height: 650px;">
+                    <div class="reset-form">
+                        <div class="form-lable">重置密码</div>
+                        <code class="checkPhone"></code>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <span class="glyphicon glyphicon-phone" ></span>
+                                </span>
+                            </div>
+                            <input type="tel" class="form-control" id="phone" placeholder="请输入手机号码">
+                        </div>
+                        <code class="checkCode"></code>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="验证码" id="code">
+                            <div class="input-group-append">
+                                <span class="input-group-text getcode">获取验证码</span>
+                            </div>
+                        </div>
+                        <code class="checkPwd1"></code>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <span class="glyphicon glyphicon-lock"></span>
+                                </span>
+                            </div>
+                            <input type="password" class="form-control" id="pwd1" placeholder="请输入密码">
+                        </div>
+                        <code class="checkPwd2"></code>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <span class="glyphicon glyphicon-check"></span>
+                                </span>
+                            </div>
+                            <input type="password" class="form-control" id="pwd2" placeholder="请确认密码">
+                        </div>
+                        <button type="button" class="btn btn-success btn-sm btn-block" id="reset">重置</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row foot">
+                <div class="col">
+                    邮箱：qzt991@126.com&emsp;&emsp;备案号：滇ICP备19007630号
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function(){
+             //验证手机
+            $('#phone').blur(function(){
+                let phone = $('#phone').val()
+                let obj = $('.checkPhone')
+                var phoneFlag = checkPhone({
+                    phone,
+                    obj,
+                })
+            })
+
+            //获取验证码
+            $('.getcode').touchstart(function () {
+                console.log(123)
+                let phone = $('#phone').val()
+                //启用按钮
+                $('.getcode').prop('disabled', false)
+
+                var time = 60
+                if (phone) {
+                    $.ajax({
+                        type: 'get',
+                        url: '{:url("login/getCode")}',
+                        data: {
+                            phone
+                        },
+                        dataType: 'json',
+                        success: (res) => {
+                            console.log(res)
+                            let code = res.code
+                            let content = res.msg
+                            // 倒计时
+                            if (code == "OK") {
+                                var interval = setInterval(function () {
+                                    time--;
+                                    if (time <= 0) {
+                                        clearInterval(interval);
+                                        var html = '获取验证码';
+                                        $('.getcode').prop('disabled', false);
+                                    } else {
+                                        var html = time + ' 秒后再次获取';
+                                        $('.getcode').prop('disabled', true);
+                                    }
+                                    $('.getcode').text(html);
+                                }, 1000);
+
+                                message({
+                                    icon: 'success',
+                                    content: '短信发送成功'
+                                })
+
+                            } else {
+
+                                message({
+                                    icon: 'error',
+                                    content
+                                })
+
+                            }
+
+                        },
+                    })
+                } else {
+                    alert('请输入手机号码！')
+                }
+            })
+
+            //验证验证码
+            $('#code').blur(function () {
+                let code = $('#code').val();
+                let phone = $('#phone').val();
+                if (code == '') {
+                    $('.checkCode').html('验证码不能为空')
+                    $('#reset').prop('disabled', true);
+                } else {
+                    $('.checkCode').html('')
+                    $.ajax({
+                        type: 'post',
+                        url: '{:url("login/getCode")}',
+                        data: {
+                            code,
+                            phone
+                        },
+                        dataType: 'json',
+                        success: (res) => {
+                            let flag = res.code
+                            let content = res.msg
+                            // console.log(res)
+                            if (flag == 200) {
+                                $('#reset').prop('disabled', false);
+                                message({
+                                    icon: 'success',
+                                    content
+                                })
+
+                            } else {
+                                message({
+                                    icon: 'error',
+                                    content
+                                })
+
+                            }
+                        }
+                    })
+                }
+            })
+
+            //密码验证
+            $('#pwd1').blur(function () {
+                let pwd = $('#pwd1').val()
+                let obj = $('.checkPwd1')
+                var checkpwd1 = checkPwd({
+                    obj1: obj,
+                    pwd1: pwd
+                })
+            })
+
+            //再次输入密码验证
+            $('#checkPwd1').blur(function () {
+                let pwd1 = $('#pwd1').val()
+                let obj1 = $('.checkPwd1')
+                let pwd2 = $('#checkPwd1').val()
+                let obj2 = $('.checkPwd2')
+                var checkpwd2 = checkPwd({
+                    obj1,
+                    obj2,
+                    pwd1,
+                    pwd2
+                })
+            })
+
+
+            //点击重置
+            $('#reset').click(function(){
+                let check = phoneFlag && checkpwd1 && checkpwd2
+                let phone = $('#phone').val()
+                const pwd = $('#pwd1').val()
+                if(check){
+                    $.ajax({
+                        type: 'post',
+                        url: '{:url("login/resetpwd")}',
+                        data: {phone,pwd},
+                        dataType: 'json',
+                        success: function(res){
+                            const code = res.code
+                            const msg = res.msg
+                            if(code == 200){
+                                message({icon:'success',content:msg})
+                                window.location.href="{:url('login/index')}";
+                            }else {
+                                message({icon:'error',content:msg})
+                            }
+                        },
+                        error: function(error){
+                            alert(error.responseText);
+                        }
+                    })
+                }else{
+                    alert('非法提交！')
+                }
+            })
+
+        })
+    </script>
+</body>
+
+</html>

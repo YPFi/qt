@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0 maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>会员中心</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/index/js/numScroll.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/header.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/style.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/base.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/member/index.css">
+</head>
+
+<body>
+    {include file="base/header"}
+    <div class="member-box">
+        <div class="container">
+            <div class="row">
+                <div class="col-2">
+                    <ul class="nav-left-container">
+                        <li class="active">
+                            <!-- li的class为active表示点击选中 -->
+                            <a href="javascript:void(0)">
+                                <!-- aria-hidden字符串。可选值为true和false,true表示元素隐藏(不可见)，false表示元素可见。 -->
+                                <span class="glyphicon glyphicon-user f12" aria-hidden="true"></span>
+                                <span>个人中心</span>
+                                <span class="glyphicon glyphicon-menu-right f12 fr" aria-hidden="true"></span>
+                            </a>
+                            <ul class="nav-left-container-small" style="display: block;">
+                                <!-- aria-expanded表示展开状态。默认为undefined, 表示当前展开状态未知。其它可选值：true表示元素是展开的；false表示元素不是展开的。 -->
+                                <li class="active">
+                                    <a class="J_menuItem" href="{:url('member/info')}" target="content">用户信息</a>
+                                </li>
+                                <li>
+                                    <a class="J_menuItem" href="{:url('member/collect')}" target="content">我的收藏</a>
+                                </li>
+                                <li>
+                                    <a class="J_menuItem" href="{:url('exam/errorBook')}" target="_blank">错题本</a>
+                                </li>
+                                <li>
+                                    <a class="J_menuItem" href="{:url('luck/index')}" target="_blank">幸运转盘</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="{:url('member/course')}" target="content">
+                                <span class="glyphicon glyphicon-book f12" aria-hidden="true"></span>
+                                <span>我的课程</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{:url('member/errorTotal')}" target="content">
+                                <span class="glyphicon glyphicon-globe f12" aria-hidden="true"></span>
+                                <span>学习数据</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{:url('member/feedback')}" target="content">
+                                <span class="glyphicon glyphicon-edit f12" aria-hidden="true"></span>
+                                <span>意见反馈</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{:url('login/logout')}">
+                                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                                <span>退出登录</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-10">
+
+                    <div class="head">
+                        <div class="user-info">
+                            {empty name="member['head_img']"}
+                            <img src="/static/index/images/face_default.jpg">
+                            {else /}
+                            <img src="{$member['head_img']}">
+                            {/empty}
+                            <span>欢迎您，<i>{$member['name']|default="勤藤教育"}</i></span>
+                        </div>
+                        <div class="qzt">
+                            <div class="title">勤藤币</div>
+                            <div class="num">
+                                <span class="timer count-title" id="count-number1" data-to="{$memberInfo['qzt']}"
+                                    data-speed="1500"></span>个
+                            </div>
+                        </div>
+                        <div class="money">
+                            <div class="title">账号余额</div>
+                            <div class="num-yellow">
+                                ￥<span class="timer count-title" id="count-number2" data-decimals="2" data-to="{$memberInfo['balance']}"
+                                    data-speed="1800"></span>元
+                            </div>
+                        </div>
+                        <div class="error">
+                            <div class="title">我的错题</div>
+                            <a href="{:url('exam/errorBook')}" target="_blank">
+                                <div class="num-blue">
+                                        <span class="timer count-title" id="count-number3" data-to="{$exam['wrong']}"
+                                            data-speed="2100"></span>{if($exam['SUM(wrong_number)']>180)}<sup>+</sup>{/if}题
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+
+                    <div class="user-details">
+                        <iframe frameborder="0" scrolling="auto" id="content" name="content"
+                            src="{:url('member/info')}"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('.nav-left-container').on('click', 'li', function () {
+            $(this).find('.glyphicon-menu-right').removeClass('glyphicon-menu-right').addClass(
+                'glyphicon-menu-down');
+            $(this).addClass('active').children('.nav-left-container-small').slideDown()
+
+            $(this).siblings().removeClass('active').children('.nav-left-container-small').slideUp()
+            $(this).siblings().find('.glyphicon-menu-down').removeClass('glyphicon-menu-down').addClass(
+                'glyphicon-menu-right ');
+        })
+        $(function(){
+            var num = $('.num-blue span').data('to')
+            if(num > 160){
+                setTimeout(function(){
+                    $('.num-blue sup').css('display','inline')
+                },2400)
+                
+            }
+        })
+    </script>
+</body>
+
+</html>

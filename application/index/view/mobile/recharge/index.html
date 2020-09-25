@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>充值</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/mobile/recharge.css" />
+</head>
+
+<body>
+<div class="top">
+    <div class="user">
+        <div class="name">
+            <a href="{:url('member/index')}">
+                {$Think.session.member.name|default="勤藤教育"}
+            </a>
+        </div>
+        <div class="money">账户余额: 135元</div>
+        <div class="home"><a href="{:url('index/index')}">回到首页</a></div>
+    </div>
+    
+</div>
+<div class="body">
+    <div class="container">
+        <!-- 充值项目 -->
+        <div class="row">
+            <div class="col type">
+                <img src="__STATIC__/index/images/recharge/money2.png" class="img-fluid">
+                <span>充值项目</span>
+            </div>
+        </div>
+        <br>
+        <div class="row project">
+            <input type="hidden" value="" id="order_id"/>
+            <div class="col-12" id="money">
+                <dl class="box col-3" data-id="1" data-name="支付测试一">￥8600</dl>
+                <dl class="box col-3" data-id="1" data-name="支付测试二">￥10600</dl>
+                <dl class="box col-3" data-id="1" data-name="支付测试三">￥10600</dl>
+                <dl class="box col-3" data-id="1" data-name="支付测试四">￥2500</dl>
+                <dl class="box col-3" data-id="1" data-name="支付测试五">￥3500</dl>
+                <dd class="box col-3" id="payMoney" data-name="自定义充值">
+                    <input type="text" id="setMoney" value="" onblur="setMoney()" placeholder="其他" />
+                </dd>
+            </div>
+        </div>
+        <!-- 支付方式 -->
+        <div class="row">
+            <div class="col pay">
+                <img src="__STATIC__/index/images/recharge/money1.png" class="img-fluid"><span>支付方式</span>
+            </div>
+        </div>
+        <div class="row payBox">
+            <div class="col-2 payType ">
+                <div id="wxpay" class="active" data-id="1">微信</div>
+                <div id="alipay" data-id="2">支付宝</div>
+            </div>
+            <div class="col-10 payCode" id="wxcode">
+                <div>微信扫一扫支付</div>
+                <div><img src="__STATIC__/index/images/recharge/code.jpg" class="img-fluid wx"></div>
+                <div> <button class="btn btn-primary find">我已支付<span class="time">(10)</span></button> </div>
+            </div>
+            <div class="col-10 payCode" id="alicode">
+                <div>支付宝扫一扫支付</div>
+                <div><img src="__STATIC__/index/images/recharge/code.jpg" class="img-fluid ali"></div>
+                <div> <button class="btn btn-primary find">我已支付<span class="time">(10)</span></button> </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="foot">
+    <img src="__STATIC__/index/images/recharge/bottom.png" class="img-fluid">
+</div>
+<script src="__STATIC__/index/js/modal_dialog.js"></script>
+<script>
+    $(function () {
+        //初始化
+        $('#alicode').hide()
+        $('#wxcode').show()
+        $('.find').hide()
+        //获取缓存的二维码信息
+        const src = localStorage.getItem('src');
+        const order_id = localStorage.getItem('order_id');
+        if(order_id !== null){
+            $('.wx').attr("src", src);
+            $('#order_id').val(order_id)
+            showButton()
+        }
+
+        //点击支付宝
+        $('#alipay').click(function () {
+            $('#alicode').show();
+            $('#wxcode').hide();
+            $(this).addClass('active')
+            $(this).siblings().removeClass('active')
+            // let money
+            // let name
+            // $('#money dl').each((index,item)=>{
+
+            //     if($(item).hasClass('active')){
+            //         money = $(item).data('id')
+            //         name = $(item).data('name')
+            //     }
+            // })
+            // getCode({
+            // 	urls: '{:url("api/alipay/index")}',
+            // 	data: {money,name},
+            // 	obj: $('.ali')
+            // })
+        })
+        //点击微信
+        $('#wxpay').click(function () {
+            $('#alicode').hide();
+            $('#wxcode').show();
+            $(this).addClass('active')
+            $(this).siblings().removeClass('active')
+        })
+
+        //用户导航
+        $('.name').mouseover(function () {
+            // 鼠标经过
+            $('.self').show();
+        })
+        $('.user ul').mouseleave(function () {
+            // 鼠标离开
+            $('.self').hide();
+        })
+
+        //支付金额事件
+        $('#money').click(function (event) {
+            if (event.target.nodeName == "DL") { //防止父节点被点击改变样式
+                // console.log(event.target);
+                $(event.target).addClass('boxActive')
+                $(event.target).siblings().removeClass('boxActive')
+                const money = $(event.target).data("id"); //获取当前节点id
+                let type
+                let urls
+                let obj
+                const name = $(event.target).data("name"); //获取当前节点id
+                $('.payType div').each((index,item)=>{
+                    if($(item).hasClass('active')){
+                        type = $(item).data('id')
+                    }
+                })
+                switch(type){
+                    case 1:
+                        urls = '{:url("@api/wxpay/index")}'
+                        obj = $('.wx')
+                        break
+                    case 2:
+                        urls = '{:url("api/alipay/index")}'
+                        obj = $('.ali')
+                }
+                $.ajax({
+                    url:urls,
+                    data: {money,name},
+                    dataType: 'json',
+                    success: (res)=>{
+                        const code = res.code
+                        if(code == '200'){
+                            const src = res.src
+                            const order_id = res.order_id
+                            localStorage.setItem('src',src);
+                            localStorage.setItem('order_id',order_id);
+                            obj.attr("src", src);
+                            $('#order_id').val(order_id)
+
+                            //显示验证按钮
+                            showButton()
+
+                        }
+                    }
+                })
+            }
+
+            $('.payBox').css('box-shadow','0px 2px 10px #a4afb1');
+        })
+
+    })
+
+    //点击支付验证
+    $('.find').click(function(){
+        const order = $('#order_id').val()
+        getOrderStatus(order)
+    })
+
+
+    //显示验证
+    function showButton(){
+        $('.find').show()
+        $('.find').prop('disabled',true)
+        let time=10
+        var interval = setInterval(function(){
+            time--;
+            if(time<=0){
+                clearInterval(interval);
+                var html = '';
+                $('.find').prop('disabled',false)
+            } else{
+                var html = '('+time+')';
+                $('.find').prop('disabled',true)
+            }
+            $('.time').text(html);
+        },1000);
+    }
+
+    //获取二维码
+    function getCode({urls,data,obj }){
+        $.ajax({
+            url:urls,
+            data: {money,name},
+            dataType: 'json',
+            success: (res)=>{
+                const code = res.code
+                const msg = res.msg
+                if(code == '200'){
+                    const src = res.src
+                    const order_id = res.order_id
+                    localStorage.setItem('src',src);
+                    localStorage.setItem('order_id',order_id);
+                    obj.attr("src", src);
+                    $('#order_id').val(order_id)
+
+                    //显示验证按钮
+                    $('.find').show()
+                    $('.find').prop('disabled',true)
+                    let time=10
+                    var interval = setInterval(function(){
+                        time--;
+                        if(time<=0){
+                            clearInterval(interval);
+                            var html = '';
+                            $('.find').prop('disabled',false)
+                        } else{
+                            var html = '('+time+')';
+                            $('.find').prop('disabled',true)
+                        }
+                        $('.time').text(html);
+                    },1000);
+
+                }
+            }
+        })
+    }
+
+    //获取交易状态
+    function getOrderStatus(order_id){
+
+        $.ajax({
+            type: 'post',
+            url: '{:url("@api/Wxpay/getOrderStatus")}',
+            data: {order_id},
+            dataType: 'json',
+            success: res=>{
+                const code = res.code
+                const msg = res.msg
+                const status = res.status
+                if(code == 200){
+                    if(status === 'SUCCESS'){
+                        //支付成功，清除缓存
+                        localStorage.removeItem('src');
+                        localStorage.removeItem('order_id');
+                        message({icon:'success',content:msg})
+                        window.location.href="{:url('index/index')}"
+                    }else{
+                        message({icon:'warning',content:msg})
+                    }
+                }else{
+                    //交易异常，清除缓存
+                    localStorage.removeItem('src');
+                    localStorage.removeItem('order_id');
+                    message({icon:'error',content:msg})
+                }
+            }
+        })
+    }
+
+    //设置自定义金额
+    function setMoney(){
+        let money = $('#setMoney').val()
+        let type
+        let urls
+        let obj
+        const name = $('#setMoney').data("name"); //获取当前节点id
+        $('.payType div').each((index,item)=>{
+            if($(item).hasClass('active')){
+                type = $(item).data('id')
+            }
+        })
+        switch(type){
+            case 1:
+                urls = '{:url("@api/wxpay/index")}'
+                obj = $('.wx')
+                break
+            case 2:
+                urls = '{:url("api/alipay/index")}'
+                obj = $('.ali')
+        }
+        $.ajax({
+            url:urls,
+            data: {money,name},
+            dataType: 'json',
+            success: (res)=>{
+                const code = res.code
+                if(code == '200'){
+                    const src = res.src
+                    const order_id = res.order_id
+                    localStorage.setItem('src',src);
+                    localStorage.setItem('order_id',order_id);
+                    obj.attr("src", src);
+                    $('#order_id').val(order_id)
+                    //显示验证按钮
+                    showButton()
+
+                }
+            }
+        })
+    }
+</script>
+</body>
+
+</html>

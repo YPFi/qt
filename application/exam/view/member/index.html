@@ -1,0 +1,91 @@
+{extend name='admin@main'}
+
+{block name="button"}
+
+{if auth("exam/Member/add")}
+<button data-modal='{:url("add")}' data-title="添加会员" class='layui-btn layui-btn-sm layui-btn-primary'>添加会员</button>
+{/if}
+
+{if auth("exam/Member/remove")}
+<button data-action='{:url("remove")}' data-rule="id#{key}" class='layui-btn layui-btn-sm layui-btn-primary'>删除会员</button>
+{/if}
+
+{/block}
+
+{block name="content"}
+<div class="think-box-shadow">
+    {include file='member/index_search'}
+    <table class="layui-table margin-top-10" lay-skin="line">
+        {notempty name='list'}
+        <thead>
+        <tr>
+            <th class='list-table-check-td think-checkbox'>
+                <input data-auto-none data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class='text-center nowrap'>会员名称</th>
+            <th class='text-center nowrap'>手机号码</th>
+            <th class="text-center">性别</th>
+            <th class="text-center">微信号</th>
+            <th class="text-center">QQ号</th>
+            <th class="text-center">新浪号</th>
+            <th class="text-center">VIP类型</th>
+            <th class="text-center">创建时间</th>
+            <th class="text-center">归属</th>
+            <th class="text-center">状态</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        {/notempty}
+        <tbody>
+        {foreach $list as $key=>$vo}
+        <tr data-dbclick>
+            <td class='list-table-check-td think-checkbox'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class='text-center nowrap'>{$vo.name|default=''}</td>
+            <td class='text-center nowrap'>{$vo.phone|default=''}</td>
+            <td class='text-center nowrap'>
+                {eq name='vo.gender' value='0'}女{else}男{/eq}<br>
+            </td>
+            <td class='text-center nowrap'>{$vo.WXnick|default='未获取'}</td>
+            <td class='text-center nowrap'>{$vo.QQnick|default='未获取'}</td>
+            <td class='text-center nowrap'>{$vo.Sinanick|default='未获取'}</td>
+            <td class='text-center nowrap'>
+                {switch vo.vipType}
+                    {case 1}超级VIP{/case}
+                    {case 2}普通VIP{/case}
+                    {case 3}体验会员{/case}
+                    {default /}普通用户
+                {/switch}
+            </td>
+            <td class='text-center nowrap'>{$vo.create_at|format_datetime}</td>
+            <td class='text-center nowrap'>{$vo.belongTo|default='未获取'}</td>
+            <td class='text-center nowrap'>
+                {eq name='vo.status' value='1'}启用</span>{else}禁用{/eq}<br>
+            </td>
+            <td class='text-center nowrap'>
+
+                {if auth("exam/Member/edit")}
+                <a data-dbclick data-title="编辑会员" class="layui-btn layui-btn-xs" data-modal='{:url("edit")}?id={$vo.id}'>编 辑</a>
+                {/if}
+
+                {if $vo.status eq 1 and auth("exam/Member/forbid")}
+                <a class="layui-btn layui-btn-xs layui-btn-warm" data-action="{:url('forbid')}" data-value="id#{$vo.id};status#0">禁 用</a>
+                {elseif auth("exam/Member/resume")}
+                <a class="layui-btn layui-btn-xs layui-btn-warm" data-action="{:url('resume')}" data-value="id#{$vo.id};status#1">启 用</a>
+                {/if}
+
+                {if auth("exam/Member/remove")}
+                <a class="layui-btn layui-btn-xs layui-btn-danger" data-confirm="确定要删除数据吗?" data-action="{:url('remove')}" data-value="id#{$vo.id}">删 除</a>
+                {/if}
+
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {empty name='list'}<span class="notdata">没有记录哦</span>{else}
+    {$pagehtml|raw|default=''}
+    {/empty}
+</div>
+{/block}

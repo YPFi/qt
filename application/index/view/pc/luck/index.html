@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{$title}</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/index/js/lottery/jQueryRotate.2.2.js"></script>
+    <script type="text/javascript" src="__STATIC__/index/js/lottery/jquery.easing.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/index/js/modal_dialog.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/header.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/style.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/luck/index.css">
+</head>
+
+<body>
+    {include file="base/header"}
+    <div class="box">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="box-bg"></div>
+                    <div class="box-body">
+                        <div class="box-title">
+                            <img src="__STATIC__/index/images/title.png" class="img-fluid">
+                        </div>
+                        <div class="box-msg">
+                            我的积分：<span class="major reward">{$memberInfo['reward']}</span>&emsp;我的勤藤币：<span class="major qzt">{$memberInfo['qzt']}</span>
+                        </div>
+                        <div class="wrapper">
+                            <div class="box">
+                                <img src="__STATIC__/index/images/zp.png" alt="">
+                            </div>
+                            <div id="button">
+                                <img src="__STATIC__/index/images/zz.png" alt="">
+                            </div>
+                        </div>
+                        <div class="targe">今日剩余抽奖次数：<span class="major sum">{$memberInfo['sum']}</span>次</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="foot">
+        {include file="base/footer"}
+    </div>
+
+    <script>
+
+
+
+
+
+
+
+
+                $(function () {
+                    var turning = false;
+                    // 初始化数据
+                    // 开始抽奖
+                    $('#button').click(function ()  {
+                        var val = $('.sum').html();
+                        // var val = $('.sum').val();
+                        if(val <= 0)
+                        {
+                            $('#button').click(function(){
+                                message({icon:'error',content:'抽奖次数已用完'});
+
+                            })
+
+                            $('.sum').text(val);return;
+                        }
+
+
+                        if(!turning){
+                            turning = true;
+                            $.ajax({
+                                type: 'POST',
+                                url: "{:url('@index/luck/rand')}",
+                                dataType: 'json',
+                                cache: false,
+                                success:function(result){
+                                    // console.log(result.data)
+                                    if(result.code==1){
+                                        $("#button").css("cursor","default");
+                                        var angle = result.data.angle; //角度
+                                        var prize = result.data.prize; //奖项
+                                        let id = result.data.id
+                                        $("#button").rotate({
+                                            duration:3000, //转动时间
+                                            angle: 0,
+                                            animateTo:3600+angle, //转动角度
+                                            easing: $.easing.easeOutSine,
+                                            callback: function(){
+                                                message({icon:'success',content:prize})
+                                                    let qzt
+                                                    switch (id) {
+                                                        case 1:
+                                                            qzt = 30
+                                                            break
+                                                        case 2:
+                                                            qzt = 20
+                                                            break
+                                                        case 3:
+                                                            qzt = 10
+                                                            break
+                                                        case 4:
+                                                            qzt = 0
+                                                            break
+                                                    }
+                                                    console.log(qzt)
+                                                    $.ajax({
+                                                        type: 'post',
+                                                        url: '{:url("luck/setqzt")}',
+                                                        data: {qzt},
+                                                        dataType: 'json',
+                                                        success: res=>{
+                                                            const code = res.code
+                                                            const msg = res.msg
+                                                            const qzt = res.qzt
+                                                            const reward = res.reward
+                                                            const sum = res.sum
+                                                            console.log(res)
+                                                            $('.qzt').html(qzt)
+                                                            $('.reward').html(reward)
+                                                            $('.sum').text(sum)
+                                                            if(code != 200){
+                                                                message({icon:'error',content:msg})
+                                                            }
+                                                        },
+                                                    })
+                                                $("#button").css("cursor","pointer");
+                                                turning = false;
+                                            }
+                                        });
+                                    }else {
+                                        alert("未知错误")
+                                    }
+                                },
+                                error: function(){
+
+                                    return false;
+                                },
+                            });
+                        }
+
+                    })
+                })
+
+    </script>
+</body>
+
+</html>

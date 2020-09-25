@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{$title}</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/header.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/style.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/recruit.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/footer.css">
+</head>
+
+<body>
+    <!-- 头部 -->
+    {include file="base/header"}
+    <div class="top-title">
+        <img src="__STATIC__/index/images/recruit.png" class="img-fluid">
+    </div>
+
+    <div class="rec-box">
+        <div class="container">
+            <div class="row">
+                {volist name="recruit" id="item"}
+                <div class="col-12 box-details">
+                    <div class="content">
+                        <div class="title">{$item.title}</div>
+                        <div class="time">
+                            <span class="glyphicon glyphicon-time text-dark"></span>&nbsp;<span id="time">{$item.create_at}</span>
+                        </div>
+                        <div class="abstract">
+                            <a href="{:url('News/details')}?id={$item.id}">{$item.abstract}</a>
+                        </div>
+                        <div class="more"><a href="{:url('News/details')}?id={$item.id}">查看详情》</a></div>
+                    </div>
+                    <div class="img">
+                        <img src="{$item.img}" class="img-fluid">
+                    </div>
+                </div>
+                {/volist}
+            </div>
+            <div class="row">
+                <div class="col">
+                    {$recruit|raw}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    {include file="base/footer"}
+
+
+
+</body>
+
+</html>

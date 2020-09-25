@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0 maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/member/feedback.css" />
+    <style>
+        body,html{
+            background-color: rgb(233, 233, 233);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="fdb-title">意见反馈</div>
+    <hr>
+    <div class="reply">
+        <div class="reply-title">我的反馈(<span>{$count}</span>)</div>
+        <ul>
+            {volist name = "feedback" id="vo"}
+                {if($vo.isReply==1)}
+                <li>
+                    <span class="rep">已回复</span>
+                    {$vo.remake}
+                    <div class="answer">回复：{$vo.isReply}</div>
+                </li>
+                {else /}
+                <li>
+                    <span class="norep">未回复</span>
+                    {$vo.remake}
+                </li>
+                {/if}
+            {/volist}
+        </ul>
+    </div>
+</body>
+
+</html>

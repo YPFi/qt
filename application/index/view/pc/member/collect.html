@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0 maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/index/js/modal_dialog.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/member/collect.css">
+</head>
+
+<body>
+    <div class="collect-title">
+        <div class="defaultHead">我的收藏</div>
+        <div class="head">当前位置：<span class="local">系统默认</span></div>
+        <span class="glyphicon glyphicon-send back">&nbsp;返回上一级</span>
+    </div>
+    <hr>
+    <div class="container collect-box">
+        <div class="row">
+            {volist name="colloct" id="vo"}
+            <div class="col-md-3 offset-md-1 c-book colloct" data-id="{$vo.id}">
+                <div class="card-img">
+                    {if($vo.pid == 0)}
+                    <a href="#detail" data-id="{$vo.id}" data-name="{$vo.name}"><img src="__STATIC__/index/images/icon/folder-sys.png" class="img-fluid"></a>
+                    {else /}
+                    <a href="#detail" data-id="{$vo.id}" data-name="{$vo.name}"><img src="__STATIC__/index/images/icon/folder.png" class="img-fluid"></a>
+                    {/if}
+                </div>
+                <div class="card-title">{$vo.name}<span class="glyphicon glyphicon-folder-open">&thinsp;{$vo.count}</span></div>
+                {if($vo.pid == 0)}
+                <div class="card-date system-add" data-toggle="modal" data-target="#myModal">系统创建</div>
+                {else /}
+                <div class="card-date">{$vo.create_at|date="Y-m-d"}</div>
+                {/if}
+            </div>
+            {/volist}
+        </div>
+    </div>
+
+<!--    点击后显示的详情-->
+    <div class="container collect-detail" id="detail">
+        <div class="row">
+            <div class="col">
+                <ul class="info">
+                    <li>七年级语文</li>
+                    <li>七年级语文</li>
+                    <li>七年级语文</li>
+                    <li>七年级语文</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--模态框-->
+    <!-- Vertically centered modal -->
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- 模态框头部 -->
+                <div class="modal-header">
+                    <h4 class="modal-title">创建收藏夹</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- 模态框主体 -->
+                <div class="modal-body">
+                    <form class="form-inline">
+                        <label for="colloctName">收藏夹名称:</label>
+                        <input type="text" class="form-control" id="colloctName" placeholder="请输入收藏夹名称">
+                        <input type="hidden" value="{$id}" id="cid">
+                    </form>
+                </div>
+
+                <!-- 模态框底部 -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success submit" data-dismiss="modal">创建</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $('.back').hide()
+        })
+        $('.submit').click(function () {
+            let name = $('#colloctName').val()
+            let id = $('#cid').val()
+            $.ajax({
+                type: 'post',
+                url: '{:url("member/addCollect")}',
+                data: {id,name},
+                dataType: 'json',
+                success: (res)=>{
+                    console.log(res)
+                    let code = res.code
+                    let msg = res.msg
+                    if(code == 200){
+                        message({icon: 'success',content: msg})
+                        window.location.reload();
+                    }else {
+                        message({icon: 'error',content: msg})
+                    }
+                }
+            })
+        })
+
+        $('.card-img a').click(function () {
+            let id =  $(this).data('id')
+            let name =  $(this).data('name')
+            $('.local').text(name)
+            $.ajax({
+                type: 'get',
+                url: '{:url("member/getCollectList")}',
+                data: {id},
+                dataType: 'json',
+                success: (res)=>{
+                    let code = res.code
+                    let msg = res.msg
+                    if(code == 200){
+                        let html = ''
+                        let data = res.data
+                        data.forEach((item)=>{
+                            html += '<li><a href="{:url(\'video/index\')}?id='+item.chapter+'&vkn='+item.vkname+'" target="_blank">'+item.name+'</a></li>'
+                        })
+                        $('.info').html(html )
+                        $('.collect-box').hide()
+                        $('.collect-detail').show()
+                        $('.head').show()
+                        $('.back').show()
+                        $('.defaultHead').hide()
+                    }
+                }
+            })
+        })
+
+        // 返回上一级
+        $('.back').click(function () {
+            $('.collect-box').show()
+            $('.collect-detail').hide()
+            $('.head').hide()
+            $('.back').hide()
+            $('.defaultHead').show()
+        })
+    </script>
+</body>
+
+</html>

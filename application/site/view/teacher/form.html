@@ -1,0 +1,214 @@
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post" class='layui-form layui-card' autocomplete="off">
+
+    <div class="layui-card-body">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">老师姓名</label>
+            <div class="layui-input-block">
+                <input name="name" required value='{$vo.name|default=""}' lay-verify="required" placeholder="请输入老师姓名" class="layui-input">
+            </div>
+        </div>
+
+        {empty name="vo.id "}
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-block">
+                <input name="password" type="password" required id="pass" lay-verify="required"  placeholder="请输入密码" class="layui-input">
+            </div>
+        </div>
+
+        {/empty}
+
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">请选择学段</label>
+            <div class="layui-input-inline">
+                <select lay-filter="stage" id="stage" name="stage">
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item grade">
+            <label class="layui-form-label">请选择年级</label>
+            <div class="layui-input-inline">
+                <select lay-filter="grade" id="grade" name="grade">
+                    <option value="{$vo.grade|default=''}">请选择年级</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item subject">
+            <label class="layui-form-label">请选择科目</label>
+            <div class="layui-input-inline">
+                <select lay-filter="subject" id="subject" name="subject">
+                    <option value="{$vo.subject|default=''}">请选择科目</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">简介</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" class="layui-textarea" name="remake">{$vo.remake|default=''}</textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">老师简介图</label>
+            <div class="layui-upload-drag" id="img">
+                <i class="layui-icon"></i>
+                <p>点击上传，或将文件拖拽到此处</p>
+                <div class="{if(!isset($vo.img))}layui-hide{/if}" id="uploadDemoView">
+                    <hr>
+                    <img src="{$vo.img|default=''}" alt="上传成功后渲染" style="max-width: 196px;max-height: 100px">
+                </div>
+            </div>
+        </div>
+
+        <input type='hidden' value="{$vo.img|default=''}" name='img' id="imgUrl">
+
+    </div>
+
+    <div class="hr-line-dashed"></div>
+    {notempty name='vo.id'}<input type='hidden' value='{$vo.id}' name='id'>{/notempty}
+
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+</form>
+<script>
+    layui.use(['form','upload'], function () {
+        var form = layui.form;
+        var $ = layui.jquery
+            ,upload = layui.upload;
+        // var imgUrl = '' //图片路径
+        //拖拽上传
+        upload.render({
+            elem: '#img'
+            ,url: '{:url("@exam/images/upload")}' //改成您自己的上传接口
+            ,done: function(res){
+                layer.msg('上传成功');
+                layui.$('#uploadDemoView').removeClass('layui-hide').find('img').attr('src', res.data.src);
+                // console.log(res)
+                // imgUrl = res.data.src;
+                $('#imgUrl').val(res.data.src)
+            }
+        });
+
+        // 初始化内容
+        $(function () {
+            //获取学段
+            $.ajax({
+                type: 'get',
+                url: '{:url("teacher/getStage")}',
+                data: {},
+                dataType: 'json',
+                success: responce=>{
+                    let code = responce.code
+                    let msg = responce.msg
+                    let data = responce.data
+                    let html = '<option value="">请选择学段</option>'
+                    if(code == 200){
+                        data.forEach(item=>{
+                            html += '<option value="'+item.id+'">'+item.name+'</option>'
+                            // console.log(item)
+                        })
+                        $('#stage').html(html)
+
+                        //设置选择值
+                        $('#stage option').each(function () {
+                            var val = $(this).val();
+                            let isSelect = '{$vo.stage|default=""}'
+                            // console.log(isSelect)
+                            if(val == isSelect){
+                                $(this).attr("selected", true);
+                            }
+                        })
+
+                        form.render('select');
+                    }else {
+                        layer.msg(msg,{icon:2})
+                    }
+                }
+            })
+
+        })
+
+        //获取年级
+        form.on('select(stage)', function (data) {
+            let stage = data.value
+            $.ajax({
+                type: 'get',
+                url: '{:url("teacher/getGrade")}',
+                data: {stage},
+                dataType: 'json',
+                success: responce=>{
+                    let code = responce.code
+                    let msg = responce.msg
+                    let data = responce.data
+                    let html = '<option value="">请选择年级</option>'
+                    if(code == 200){
+                        data.forEach(item=>{
+                            html += '<option value="'+item.id+'">'+item.name+'</option>'
+                            // console.log(item)
+                        })
+                        $('#grade').html(html)
+
+                        //设置选择值
+                        $('#grade option').each(function () {
+                            var val = $(this).val();
+                            let isSelect = '{$vo.grade|default=""}'
+                            // console.log(isSelect)
+                            if(val == isSelect){
+                                $(this).attr("selected", true);
+                            }
+                        })
+
+                        form.render('select');
+                    }else {
+                        layer.msg(msg,{icon:2})
+                    }
+                }
+            })
+        })
+
+        //获取科目
+        form.on('select(grade)', function (data) {
+            let grade = data.value
+            $.ajax({
+                type: 'get',
+                url: '{:url("teacher/getSubject")}',
+                data: {grade},
+                dataType: 'json',
+                success: responce=>{
+                    let code = responce.code
+                    let msg = responce.msg
+                    let data = responce.data
+                    let html = '<option value="">请选择科目</option>'
+                    if(code == 200){
+                        data.forEach(item=>{
+                            html += '<option value="'+item.id+'">'+item.name+'</option>'
+                            // console.log(item)
+                        })
+                        $('#subject').html(html)
+                        //设置选择值
+                        $('#subject option').each(function () {
+                            var val = $(this).val();
+                            let isSelect = '{$vo.subject|default=""}'
+                            // console.log(isSelect)
+                            if(val == isSelect){
+                                $(this).attr("selected", true);
+                            }
+                        })
+                        form.render('select')
+                    }else {
+                        layer.msg(msg,{icon:2})
+                    }
+                }
+            })
+        })
+
+
+
+    })
+</script>

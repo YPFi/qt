@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>视频播放</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/header.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/style.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/video.css">
+    <!-- 滚动条 -->
+
+    <script type="text/javascript" src="__STATIC__/index/js/zUI.js"></script>
+    <script>
+        $(function () {
+            $(".content").panel({
+                iWheelStep: 32
+            });
+            $(".message").panel({
+                iWheelStep: 32
+            });
+            $(".notes").panel({
+                iWheelStep: 32
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <!-- 头部 -->
+    {include file="base/header2"}
+    <div class="video-title">
+        当前视频：{$head['version']}>{$head['grade']}>{$head['subject']}>{$head['term']}>{$head['chapter']}
+    </div>
+    <div class="video-box">
+        <div class="video-info" id="video">
+
+        </div>
+        <div class="video-nav">
+            <div class="teacher">
+                <div class="teacher-img">
+                    <img src="__STATIC__/index/images/head.jpg" class="img-fluid">
+                </div>
+                <div class="teacher-info">
+                    <div class="top">王梦洁</div>
+                    <div class="bottom">关注人数：3715</div>
+                </div>
+                <div class="teacher-for">
+                    <button>+关注</button>
+                </div>
+            </div>
+            <div class="video-detail">
+                <div class="detail-nav">
+                    <dl class="nav-bar active" data-id="0">目录</dl>
+                    <dl class="nav-bar" data-id="1">信息</dl>
+                    <dl class="nav-bar" data-id="2">笔记</dl>
+                </div>
+                <div class="content nav-height">
+                    <ul id="contetnList">
+                        {volist name="chapter" id="vo"}
+                        <li data-vkn="{$vo.vkname}" data-id="{$vo.id}" title="{$vo.name}" id="{$vo['id']==$id?'isactive':''}">
+                            <span><img src="__STATIC__/index/images/icon/pj.png"></span>
+                            {$vo.name}
+                        </li>
+                        {/volist}
+                    </ul>
+                </div>
+                <div class="message nav-height">
+                    <ul style="width: 100%;">
+                        <li>
+                            <div class="teacher-msg">
+                                <div class="title-box">
+                                    王梦洁老师
+                                </div>
+                                <div class="info">
+                                    12ejadjpadqnha;ldbqljnabcandadm.aclaljd12ejadjpadqnha;ldbqljnabcandadm.aclaljd12ejadjpadqnha;ldbqljnabcandadm.aclaljd12ejadjpadqnha;ldbqljnabcandadm.aclaljd12ejadjpadqnha;ldbqljnabcandadm.aclaljd
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="course-msg">
+                                <div class="title-box">
+                                    课程介绍
+                                </div>
+                                <div class="info">
+                                    12<br>34<br>56
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="note">
+                    <ul>
+                        <li>
+                            <div class="notes-form">
+                                <textarea id="note"></textarea>
+                                <button class="btn btn-success text-white" onclick="save()">保存</button>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="notes-msg">
+                                <ul>
+                                    
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="video-bottom">
+            <div class="share">
+                分享给好友：
+                <img src="__STATIC__/index/images/icon/wx-share.png">
+                <img src="__STATIC__/index/images/icon/qq-share.png">
+            </div>
+            <div class="watch">
+                <button data-toggle="modal" data-target="#myModal"
+                    class="{$isCollect == 1 ? 'glyphicon glyphicon-star' : 'glyphicon glyphicon-star-empty'} collect"
+                    style="color: #a08f33;">{$isCollect? '已收藏' : '收藏'}</button>
+                &emsp;&emsp;
+                <img src="__STATIC__/index/images/icon/play.png">
+                累计播放{$watch}次
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框 -->
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+
+                <!-- 模态框头部 -->
+                <div class="modal-header">
+                    <h4 class="modal-title">我的收藏夹</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- 模态框主体 -->
+                <div class="modal-body">
+                    <ul class="collectList">
+                        {volist name='collect' id="vo"}
+                            <li class="sys" data-id="{$vo.id}" style="margin-top: 10px">
+                                {if($vo.pid == 0)}
+                                <img src="__STATIC__/index/images/icon/folder-sys.png" width="40px">
+                                {else /}
+                                <img src="__STATIC__/index/images/icon/folder.png" width="40px">
+                                {/if}
+                                {$vo.name}
+                            </li>
+                        {/volist}
+                    </ul>
+                </div>
+
+                <!-- 模态框底部 -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success select" data-dismiss="modal">确定</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="__STATIC__/index/js/modal_dialog.js"></script>
+    <script type="text/javascript" src="__STATIC__/ckplayer/ckplayer.js"></script>
+    <script type="text/javascript">
+        var videoObject = {
+            container: '#video', //“#”代表容器的ID，“.”或“”代表容器的class
+            variable: 'player', //该属性必需设置，值等于下面的new chplayer()的对象
+            autoplay: false, //自动播放
+            video: '{$video["url"]}' //视频地址
+        };
+        var player = new ckplayer(videoObject);
+        $(function () {
+            let logo_position = '{$video["logo_position"]}'
+            console.log(logo_position)
+            switch (logo_position) {
+                case 1:
+                    logoCongig.align = 'left'
+                    logoCongig.offsetX = 0
+                    break
+                case 2:
+                    logoCongig.align = 'right'
+                    logoCongig.offsetX = -188
+                    break
+
+
+            }
+        })
+    </script>
+        
+    <script>
+        var isShow = true; //导航栏状态
+        // 导航栏切换
+        $('.detail-nav').click(function (event) {
+            if (event.target.nodeName === 'DL') {
+                $(event.target).addClass('active')
+                $(event.target).siblings().removeClass('active')
+                var id = $(event.target).data('id')
+                switch (id) {
+                    case 0:
+                        $('.content').show()
+                        $('.message').hide()
+                        $('.notes').hide()
+                        break
+                    case 1:
+                        $('.content').hide()
+                        $('.message').show()
+                        $('.notes').hide()
+                        break
+                    case 2:
+                        $('.content').hide()
+                        $('.message').hide()
+                        $('.notes').show()
+                        break
+                }
+            }
+        })
+        $(function () {
+            var info = $('.video-info') //视频对象
+            var nav = $('.video-nav') //导航对象
+            var win = $(window); //获取窗口对象
+
+            $('.notes ul').css('width','98%')
+
+            var video_height = (info.width() / 16) * 9 //视频高度 16：9
+            nav.css('height', video_height + 49) //设置导航高度
+
+            //设置滚动区域高度
+            var video_nav = $('.video-nav').height(); //左侧区域高度
+            var teacher = $('.teacher').height(); //老师介绍高度
+            var scroll = video_nav - teacher - 60
+            $('.nav-height').css('height', scroll)
+            $('#video').css('height', video_height)
+            //窗口改变时
+            win.resize(function () {
+                video_height = (info.width() / 16) * 9
+                nav.css('height', video_height + 49) //设置导航高度
+                var scroll = video_nav - teacher - 60
+                $('.nav-height').css('height', scroll)
+                $('#video').css('height', video_height)
+            })
+        })
+    </script>
+    <script>
+        //处理逻辑
+        $(function(){
+            let isCollect = '{$isCollect}'
+            if (isCollect == 1) {
+                //已收藏时不可点击
+                $('.collect').attr('disabled',true)
+            }
+            //加载笔记
+            getNoote({ 
+                chapter: '{$id}', 
+                mid: '{$Think.session.member.id}'
+            })
+        })
+
+
+        $('.collectList').click(function (event) {
+            if(event.target.nodeName == 'LI'){
+                $(event.target).addClass('select')
+            }
+        })
+
+        //加入收藏
+        $('.select').click(function(){
+            let cid = ''
+            $('.collectList li').each(function(){
+                if($(this).hasClass('select')){
+                    cid = $(this).data('id')
+                }
+            })
+            if(id){
+                let chapter = '{$id}'
+                let vkname = '{$vkn}'
+                let name = '{$head["chapter"]}'
+                $.ajax({
+                    type: 'post',
+                    url: '{:url("video/addCollect")}',
+                    data: {cid,chapter,name,vkname,id:chapter},
+                    dataType: 'json',
+                    success: (res)=>{
+                        let code = res.code
+                        let msg = res.msg
+                        if(code == 200){
+                            $('.collect').attr('disabled',true)
+                            $('.collect').text('已收藏')
+                            $('.collect').removeClass('glyphicon glyphicon-star-empty')
+                            $('.collect').addClass('glyphicon glyphicon-star')
+                            message({
+                                icon: 'success',
+                                content: msg,
+                                top: 200,
+                            })
+                        }
+                    }
+                })
+            }
+        })
+    
+        $('#contetnList').click(function(event){
+            if(event.target.nodeName == 'LI'){
+                let vkn = $(event.target).data('vkn')
+                let id = $(event.target).data('id')
+                let url = "{:url('video/index')}"+"?id="+id+"&vkn="+vkn
+                window.location.href = url
+            }
+        })
+    
+        //点击关注
+        $('.teacher-for button').click(function(){
+            let tid = 1
+            $.ajax({
+                type: 'get',
+                url: '{:url("video/follow")}',
+                data: {tid},
+                dataType: 'json',
+                success: (res)=>{
+                    let code = res.code
+                    let msg = res.msg
+                    if(code == 200){
+                        $('.teacher-for button').text('已关注')
+                        $('.teacher-for button').attr('disabled',true)
+                        message({
+                            icon: 'success',
+                            content: msg
+                        })
+                    }else{
+                        message({
+                            icon: 'error',
+                            content: msg
+                        })
+                    }
+                }
+            })
+        })
+
+        function save(){
+            let text = $('#note').val()
+            let chapter = '{$id}'
+            if(text != ''){
+                $.ajax({
+                    type: 'post',
+                    url: '{:url("video/addNote")}',
+                    data: {id:chapter,text},
+                    dataType: 'json',
+                    success: (res)=>{
+                        let code = res.code
+                        let msg = res.msg
+                        if(code == 200){
+                            message({
+                                icon: 'success',
+                                content: msg
+                            })
+                            getNoote({
+                                chapter,
+                                    mid
+                            })
+                        }
+                    }
+                })
+            }
+        }
+    
+        function getNoote({chapter,mid}){
+
+            $.ajax({
+                type: 'get',
+                url: '{:url("video/getNote")}',
+                data: {mid,id:chapter},
+                dataType: 'json',
+                success: (res)=>{
+                    let code = res.code
+                    let msg = res.msg
+                    if(code == 200){
+                        let data = res.data
+                        console.log(data)
+                        let html = ''
+                        data.forEach((item)=>{
+                            html += '<li data-id="'+item.id+'">'+item.content+'<span onclick="delNote('+item.id+')">删除</span></li>'
+                        })
+                        $('.notes-msg ul').html(html)
+                    }else {
+                        message({icon:'error',content:msg})
+                    }
+                }
+            })
+        }
+
+        function delNote(id){
+            let chapter = '{$id}'
+            let mid = '{$Think.session.member.id}'
+            $.ajax({
+                type: 'get',
+                url: '{:url("video/delNote")}',
+                data: {id},
+                dataType: 'json',
+                success: (res)=>{
+                    let code = res.code
+                    let msg = res.msg
+                    if(code == 200){
+                        message({
+                            icon: 'success',
+                            content: msg
+                        })
+                        getNoote({
+                            chapter,
+                            mid
+                        })
+                    }
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>

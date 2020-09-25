@@ -1,0 +1,266 @@
+<form onsubmit="return false;" action="{:request()->url()}" lay-filter="form" data-auto="true" method="post" class='layui-form layui-card' autocomplete="off">
+
+    <div class="layui-card-body">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">习题标题</label>
+            <div class="layui-input-block">
+                <textarea id="title"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">A:</label>
+            <div class="layui-input-block">
+                <textarea id="A"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">B:</label>
+            <div class="layui-input-block">
+                <textarea id="B"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">C:</label>
+            <div class="layui-input-block">
+                <textarea id="C"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">D:</label>
+            <div class="layui-input-block">
+                <textarea id="D"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">分值</label>
+            <div class="layui-input-block">
+                <input name="score" value='{$vo.score|default=""}' placeholder="请输入分值" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">答案</label>
+            <div class="layui-input-block">
+                <input name="answer" value='{$vo.answer|default=""}' placeholder="请输入分值" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">解析</label>
+            <div class="layui-input-block">
+                <textarea id="remake"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">教材版本</label>
+            <div class="layui-input-block">
+                <select name="version" id="version-form" lay-filter="version">
+                    <option value="">请选择学段</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">学段</label>
+            <div class="layui-input-block">
+                <select name="stage" id="stage-form" lay-filter="stage">
+                    <option value="">请选择学段</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">年级</label>
+            <div class="layui-input-block">
+                <select name="grade" id="grade-form" lay-filter="grade">
+                    <option value="">请选择年级</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">科目</label>
+            <div class="layui-input-block">
+                <select name="subject" id="subject-form" lay-filter="subject">
+                    <option value="">请选择科目</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">分册</label>
+            <div class="layui-input-block">
+                <select name="term" id="term-form" lay-filter="term">
+                    <option value="">请选择分册</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="hr-line-dashed"></div>
+    {notempty name='vo.id'}<input type='hidden' id="vID" value='{$vo.id}' name='id'>{/notempty}
+
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+</form>
+
+
+
+<script>
+    layui.use(['form','layedit'], function(){
+        var form = layui.form
+        var layedit = layui.layedit;
+        layedit.set({
+            uploadImage: {
+                url: '{:url("images/upload")}' //接口url
+                ,type: 'post' //默认post
+            }
+        });
+        var titleIndex = layedit.build('title',{ height: 180}); //建立编辑器
+        var AIndex = layedit.build('A',{ height: 180}); //建立编辑器
+        var BIndex = layedit.build('B',{ height: 180}); //建立编辑器
+        var CIndex = layedit.build('C',{ height: 180}); //建立编辑器
+        var DIndex = layedit.build('D',{ height: 180}); //建立编辑器
+        var remakeIndex = layedit.build('remake',{ height: 180}); //建立编辑器
+
+        form.render()
+        // 初始化
+        $(function () {
+            //获取教材版本
+            $.ajax({
+                type: 'get',
+                url: '{:url("chapter/getVersion")}',
+                data: {},
+                dataType: 'json',
+                success: function (responce) {
+                    let code = responce.code
+                    let msg = responce.msg
+                    let html = '<option value="">请选择教材版本</option>'
+                    if(code == 200){
+                        for(let i in responce.data){
+                            let obj = responce.data[i]
+                            html += '<option value="'+obj.id+'">'+obj.name+'</option>'
+                        }
+                        // console.log(html)
+                        $('#version-form').html(html)
+                        form.render('select')
+                    }else {
+                        layer.msg(msg, {icon: 5})
+                    }
+                }
+            })
+
+            //获取学段
+            $.ajax({
+                type: 'get',
+                url: '{:url("chapter/getStage")}',
+                data: {},
+                dataType: 'json',
+                success: function (responce) {
+                    let code = responce.code
+                    let msg = responce.msg
+                    let html = '<option value="">请选择学段</option>'
+                    if(code == 200){
+                        for(let i in responce.data){
+                            let obj = responce.data[i]
+                            html += '<option value="'+obj.id+'">'+obj.name+'</option>'
+                        }
+                        $('#stage-form').html(html)
+                        form.render('select')
+                    }else {
+                        layer.msg(msg, {icon: 5})
+                    }
+                }
+            })
+
+        })
+
+        //获取年级信息
+        form.on('select(stage)', function (data) {
+            // console.log(data.value); //得到被选中的值
+            $.ajax({
+                type: 'get',
+                url: '{:url("chapter/getGrade")}',
+                data: {stage:data.value},
+                dataType: 'json',
+                success: function (responce) {
+                    let code = responce.code
+                    let msg = responce.msg
+                    let html = '<option value="">请选择年级</option>'
+                    if(code == 200){
+                        for(let i in responce.data){
+                            let obj = responce.data[i]
+                            html += '<option value="'+obj.id+'">'+obj.name+'</option>'
+                        }
+                        $('#grade-form').html(html)
+                        form.render('select')
+                    }else {
+                        layer.msg(msg, {icon: 5})
+                    }
+                }
+            })
+
+            //获取分册信息
+            $.ajax({
+                type: 'get',
+                url: '{:url("chapter/getTerm")}',
+                data: {stage:data.value},
+                dataType: 'json',
+                success: function (responce) {
+                    let code = responce.code
+                    let msg = responce.msg
+                    console.log(responce)
+                    let html = '<option value="">请选择分册</option>'
+                    if(code == 200){
+                        for(let i in responce.data){
+                            let obj = responce.data[i]
+                            html += '<option value="'+obj.id+'">'+obj.name+'</option>'
+                        }
+                        $('#term-form').html(html)
+                        form.render('select')
+                    }else {
+                        layer.msg(msg, {icon: 5})
+                    }
+                }
+            })
+        })
+
+        //获取科目信息
+        form.on('select(grade)', function (data) {
+            // console.log(data.value); //得到被选中的值
+            $.ajax({
+                type: 'get',
+                url: '{:url("chapter/getSubject")}',
+                data: {grade:data.value},
+                dataType: 'json',
+                success: function (responce) {
+                    let code = responce.code
+                    let msg = responce.msg
+                    let html = '<option value="">请选择科目</option>'
+                    if(code == 200){
+                        for(let i in responce.data){
+                            let obj = responce.data[i]
+                            html += '<option value="'+obj.id+'">'+obj.name+'</option>'
+                        }
+                        $('#subject-form').html(html)
+                        form.render('select')
+                    }else {
+                        layer.msg(msg, {icon: 5})
+                    }
+                }
+            })
+        })
+
+    })
+
+</script>

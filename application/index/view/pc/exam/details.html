@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{$title}</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/header.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/style.css">
+    <link rel="stylesheet" href="__STATIC__/index/css/exam/style.css" />
+    <link rel="stylesheet" href="__STATIC__/index/css/fonts.css" />
+    <link rel="stylesheet" href="__STATIC__/index/css/exam/index.css" />
+    <link rel="stylesheet" href="__STATIC__/index/css/exam/radio.css" />
+</head>
+
+<body>
+    <!-- 头部 -->
+    {include file="base/header"}
+    <div class="exam-box">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <h3>{$nav['grade']}{$nav['subject']}·{$nav['chapter']}</h3>
+                </div>
+            </div>
+            <form action="{:url('exam/examResult')}" method="POST">
+                <input name="chapter" value="{$page[0]['chapter']}" type="hidden" />
+                {volist name="page" id="vo" key="index"}
+                <div class="row text-contents">
+                    <div class="col-12 title">{$index}.{$vo.title|raw}</div>
+                    <div class="col options">
+                        <input type="radio" name="option{$index}" value="{$vo.id}_A" id="option{$index}A">
+                        <label for="option{$index}A">A.{$vo.optionA|raw}</label>
+                    </div>
+                    <div class="col-12 options">
+                        <input type="radio" name="option{$index}" value="{$vo.id}_B" id="option{$index}B">
+                        <label for='option{$index}B'>B.{$vo.optionB|raw}</label>
+                    </div>
+                    <div class="col-12 options">
+                        <input type="radio" name="option{$index}" value="{$vo.id}_C" id="option{$index}C">
+                        <label for='option{$index}C'>C.{$vo.optionC|raw}</label>
+                    </div>
+                    <div class="col-12 options">
+                        <input type="radio" name="option{$index}" value="{$vo.id}_D" id="option{$index}D">
+                        <label for='option{$index}D'>D.{$vo.optionD|raw}</label>
+                    </div>
+                    <div class="col-12 clear-padding-col">
+                        <img src="__STATIC__/index/images/exam-bottom.png" class="img-fluid">
+                    </div>
+                </div>
+                {/volist}
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" class="btn btn-success submit">交卷</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="loading">阅卷中<i class="iconfont icon-icon_jiazai"></i></div>
+
+    <div class="foot">
+        备案号：滇ICP备19007630号
+    </div>
+    <!-- 计时器 -->
+    <div class="time-box">
+        <div class="close">&times;</div>
+        <div class="time-title">
+            <span class="glyphicon glyphicon-time"></span>考试用时
+        </div>
+        <div class="time"></div>
+        <div class="flag">点击可以暂停/开始计时</div>
+    </div>
+    <div class="open">开启计时</div>
+    <script>
+        $(function () {
+            $('.loading').hide()
+            var status = 0
+            var stop = 0
+            var second = 0
+            var minute = 0
+            var hour = 0
+            var str = ''
+            var timer
+            //开始计时
+            $('.time-box').click(function () {          
+                stop++
+                if (stop % 2 != 0) {
+                    //开始计时    
+                    timer = setInterval(timing, 1000)
+                } else {
+                    //暂停计时
+                    clearInterval(timer)
+                }
+            })
+            //关闭计时
+            $('.close').click(function(){
+                $('.time-box').css('display','none')
+                $('.open').css('display','block')
+            })
+            //开启计时
+            $('.open').click(function(){
+                stop++
+                $('.time-box').css('display','block')
+                if (stop % 2 != 0) {
+                    //开始计时    
+                    timer = setInterval(timing, 1000)
+                } else {
+                    //暂停计时
+                    clearInterval(timer)
+                }
+                $('.open').css('display','none')
+            })
+            //计时函数
+            function timing() {
+                second++;
+                if (second > 59) {
+                    second = 0;
+                    minute++;
+                    if (minute > 59) {
+                        minute = 0;
+                        hour++;
+                    }
+                }
+                second = pd2(second, 2)
+                minute = pd2(minute, 2)
+                hour = pd2(hour, 2)
+                str = hour + ":" + minute + ":" + second
+                $('.time').text(str)
+            }
+
+            //为小于9的数字添0
+            function pd2(num, length) {
+                return (Array(length).join('0') + num).slice(-length);
+            }
+        })
+    
+        $(".submit").on("click", function(e) {
+            $('.loading').attr('display','flex')
+        });    
+    
+    </script>
+</body>
+
+</html>

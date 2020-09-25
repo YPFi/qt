@@ -1,0 +1,126 @@
+<!-- footer start -->
+<diV class="footer-s">
+    <div class="container">
+        <div class="row">
+            <div class="col-3 foot-box">
+                <div class="box-img"><img src="__STATIC__/index/images/z.png" class="img-fluid"></div>
+                <div class="box-text">
+                    <div>品质保障</div>
+                    <div>专业教师 家长无忧</div>
+                </div>
+            </div>
+            <div class="col-3 foot-box">
+                <div class="box-img"><img src="__STATIC__/index/images/d.png" class="img-fluid"></div>
+                <div class="box-text">
+                    <div>签约提分</div>
+                    <div>为学员优异成绩提供保障</div>
+                </div>
+            </div>
+            <div class="col-3 foot-box">
+                <div class="box-img"><img src="__STATIC__/index/images/y.png" class="img-fluid"></div>
+                <div class="box-text">
+                    <div>教学效果保障</div>
+                    <div>答疑解惑 提高学习效率</div>
+                </div>
+            </div>
+            <div class="col-3 foot-box">
+                <div class="box-img"><img src="__STATIC__/index/images/t.png" class="img-fluid"></div>
+                <div class="box-text1">
+                    <div>特色服务体验</div>
+                    <div>为学员提供私人定制服务</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</diV>
+<div class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-8 contact-us">
+                <div class="title">联系我们/CONTACT US</div>
+                <div class="us">
+                    <div class="contact-content">
+                        <div class="left font-max">深圳总部</div>
+                        <div class="right bold">
+                            <div>地址：深圳市前海深港合作区前湾一路1号A栋21</div>
+                            <div>电话：400-675-9062</div>
+                        </div>
+                    </div>
+                    <div class="contact-content">
+                        <div class="left">重庆运营中心</div>
+                        <div class="right">
+                            <div>地址：全境重庆国际商务中心重庆市渝中区中华路178号14楼1402</div>
+                            <div>电话：023-63255021</div>
+                        </div>
+                    </div>
+                    <div class="contact-content">
+                        <div class="left">福建运营中心</div>
+                        <div class="right">
+                            <div>地址：福建省福州市台江区曙光之路16号恒丰大厦18层</div>
+                            <div>电话：0591-83851232</div>
+                        </div>
+                    </div>
+                    <div class="contact-content">
+                        <div class="left">湖北运营中心</div>
+                        <div class="right">
+                            <div>地址：湖北省武汉市洪山区关东街道当代中心505</div>
+                            <div>电话：023-63255021</div>
+                        </div>
+                    </div>
+                    <div class="contact-content">
+                        <div class="left">东莞运营中心</div>
+                        <div class="right">
+                            <div>地址：广东省东莞市东坑镇风兴路40号</div>
+                            <div>电话：400-675-9062</div>
+                        </div>
+                    </div>
+                    <div class="contact-content">
+                        <div class="left">云南运营中心</div>
+                        <div class="right">
+                            <div>地址：云南省昆明市西山区润城第二大道1栋1705</div>
+                            <div>电话：0871-68186689</div>
+                        </div>
+                    </div>
+                    <div class="contact-content">
+                        <div class="left">楚雄运营中心</div>
+                        <div class="right">
+                            <div>地址：云南省楚雄市高新区顺鑫街三期私营城55号</div>
+                            <div>电话：0875-3397678</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 news">
+                <div class="title">新闻资讯/NEWS</div>
+                <div class="details">
+                    <ul>
+                        {volist name="footer" id="vo"}
+                            <li><a href="{:url('News/details')}?id={$vo.id}">{$vo.title}</a></li>
+                        {/volist}
+                    </ul>
+                </div>
+                <div class="code">
+                    <div class="wx">
+                        <img src="__STATIC__/index/images/pc.png" class="img-fluid">
+                    </div>
+                    <div class="pc">
+                        <img src="__STATIC__/index/images/wx.png" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <br>
+            <div class="col-12 footer-nav">
+                <a href="{:url('Aboutus/index')}">关于我们</a>|
+                <a href="{:url('Recruit/index')}">企业招聘</a>|
+                <a href="http://wx.qzt991.com/">合作专区</a>|
+                <a href="{:url('contact/index')}">意见反馈</a>
+            </div>
+            <div class="col-12 footer-nav" style="padding: 0px;">
+                报名咨询热线：400-675-9062&nbsp;&nbsp;&nbsp;&nbsp;邮箱：qzt991@126.com&nbsp;&nbsp;&nbsp;&nbsp;滇ICP备19007630号
+            </div>
+        </div>
+    </div>
+</div>
+<!-- footer end -->

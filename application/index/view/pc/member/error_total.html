@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0 maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- 引入 echarts.js -->
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+    <!-- 引入主题 -->
+    <script src="__STATIC__/index/js/theme/macarons.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/member/error.css">
+</head>
+
+<body>
+    <div class="error-detail">
+        <div class="error-title">做题统计</div>
+        <div class="day-error">
+            <div class="title">
+                <span class="timer count-title"  data-to="{$today['today']}" data-speed="1500"></span>题
+            </div>
+            <div class="day-box">
+                今日做题<span class="glyphicon  {$today['flag'] > 0 ? 'text-success glyphicon-arrow-up' : 'text-danger glyphicon-arrow-down'}"></span>
+                <span class="timer count-title text-success" data-decimals="2" data-to="{$today['rate']}"
+                    data-speed="1500"></span>%
+            </div>
+        </div>
+        <div class="day-error">
+            <div class="title">
+                <span class="timer count-title" data-to="{$week['week']}" data-speed="1500"></span>题
+            </div>
+            <div class="day-box">
+                今周做题<span class="glyphicon {$week['flag'] > 0 ? 'text-success glyphicon-arrow-up' : 'text-danger glyphicon-arrow-down'}"></span>
+                <span class="timer count-title " data-decimals="2" data-to="{$week['rate']}"
+                    data-speed="1500"></span>%
+            </div>
+        </div>
+        <div class="day-error">
+            <div class="title">
+                <span class="timer count-title" data-to="{$month['month']}" data-speed="1500"></span>题
+            </div>
+            <div class="day-box">
+                今月做题<span class="glyphicon {$month['flag'] > 0 ? 'text-success glyphicon-arrow-up' : 'text-danger glyphicon-arrow-down'}"></span>
+                <span class="timer count-title {$month['flag'] > 0 ? 'text-success' : 'text-danger'}" data-decimals="2" data-to="{$month['rate']}"
+                    data-speed="1500"></span>%
+            </div>
+        </div>
+        <div class="day-error">
+            <div class="title">
+                <span class="timer count-title" data-to="{$term}" data-speed="1500"></span>题
+            </div>
+            <div class="day-box">
+                本学期做题
+<!--               <span class="glyphicon glyphicon-arrow-up text-success"></span>-->
+<!--                <span class="timer count-title text-success" data-decimals="2" data-to="0.33"-->
+<!--                    data-speed="1500"></span>%-->
+            </div>
+        </div>
+    </div>
+    <div class="error-data">
+        <div class="data-title">做题数据</div>
+        <div class="data-box">
+            <div class="ECharts-change">
+                <dl class="change-box active" data-id="0">本学期数据</dl>
+<!--                <dl class="change-box" data-id="1">本月数据</dl>-->
+<!--                <dl class="change-box" data-id="2">本周数据</dl>-->
+<!--                <dl class="change-box2" data-id="3">-->
+<!--                    日期：<input type="date" id="myDate">-->
+<!--                </dl>-->
+            </div>
+            <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+            <div id="main"></div>
+            <script type="text/javascript">
+                $('.ECharts-change').click(function(event){
+                    if(event.target.nodeName === 'DL'){
+                        $(event.target).addClass('active')
+                        $(event.target).siblings().removeClass('active')
+                    }
+                })
+                const date = '{$date}'.split(',')
+                const counts = '{$count}'.split(',')
+                const error = '{$error}'.split(',')
+                const rate = '{$rate}'.split(',')
+                // 基于准备好的dom，初始化echarts实例
+                var myChart = echarts.init(document.getElementById('main'), 'macarons');
+                // 指定图表的配置项和数据
+                var colors = ['#0a8767', '#ffb02f', '#00aef3'];
+
+                var option = {
+                    color: colors,
+                    title: {
+                        text: '本学期做题数据'
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross'
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            dataView: {
+                                show: true,
+                                readOnly: true
+                            },
+                            restore: {
+                                show: false
+                            },
+                            saveAsImage: {
+                                show: true
+                            }
+                        }
+                    },
+                    legend: {
+                        data: ['做题数', '错题数', '错题率']
+                    },
+                    xAxis: [{
+                        type: 'category',
+                        axisTick: {
+                            alignWithLabel: true
+                        },
+                        data: date
+                    }],
+                    yAxis: [{
+                            type: 'value',
+                            name: '做题数',
+                            position: 'left',
+                            axisLine: {
+                                lineStyle: {
+                                    color: colors[0]
+                                }
+                            },
+                            axisLabel: {
+                                formatter: '{value}'
+                            }
+                        },
+                        {
+                            type: 'value',
+                            name: '错题数',
+                            position: 'left',
+                            offset: 40,
+                            axisLine: {
+                                lineStyle: {
+                                    color: colors[1]
+                                }
+                            },
+                            axisLabel: {
+                                formatter: '{value}'
+                            }
+                        },
+                        {
+                            type: 'value',
+                            name: '错题率',
+                            min: 0,
+                            max: 100,
+                            position: 'right',
+                            offset: 20,
+                            axisLine: {
+                                lineStyle: {
+                                    color: colors[2]
+                                }
+                            },
+                            axisLabel: {
+                                formatter: '{value} %'
+                            }
+                        },
+                    ],
+                    series: [{
+                            name: '做题数',
+                            type: 'bar',
+                            data: counts
+                        },
+                        {
+                            name: '错题数',
+                            type: 'bar',
+                            yAxisIndex: 1,
+                            data: error
+                        },
+                        {
+                            name: '错题率',
+                            type: 'line',
+                            yAxisIndex: 2,
+                            data: rate
+                        }
+                    ]
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+
+            </script>
+        </div>
+    </div>
+    <script src="__STATIC__/index/js/numScroll.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0 maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>错题本</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/header.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/style.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/exam/errorbook.css">
+    <!-- 滚动条 -->
+    <script type="text/javascript" src="__STATIC__/index/js/zUI.js"></script>
+    <style>
+        .zUIpanelScrollBox,
+        .zUIpanelScrollBar {
+            width: 10px;
+            top: 4px;
+            right: 2px;
+            border-radius: 5px;
+
+        }
+
+        .zUIpanelScrollBox {
+            background: black;
+            opacity: 0.1;
+            filter: alpha(opacity=10);
+        }
+
+        .zUIpanelScrollBar {
+            background: #03c39a;
+            opacity: 0.8;
+            filter: alpha(opacity=80);
+        }
+    </style>
+    <script>
+        $(function () {
+            $(".chapter").panel({
+                iWheelStep: 32
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <!-- 头部 -->
+    {include file="base/header"}
+    <div class="top-title">
+        <img src="__STATIC__/index/images/error-title.png" class="img-fluid">
+    </div>
+    <div class="error-box">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="error-total">
+                        <div class="box-title">
+                            <span>错</span><span>题</span><span>统</span><span>计</span>
+                            <div style="float: left;">（总错题数量<code>{$total['total']}</code>题）</div>
+                        </div>
+                        <div class="box">
+                            <div class="box-s">
+                                <div>{$today}</div>
+                                <div>今日错题</div>
+                            </div>
+                        </div>
+                        <div class="box">
+                            <div class="box-s">
+                                <div>{$week}</div>
+                                <div>本周错题</div>
+                            </div>
+                        </div>
+                        <div class="box">
+                            <div class="box-s">
+                                <div>{$mouth}</div>
+                                <div>本月错题</div>
+                            </div>
+                        </div>
+                        <div class="box-last">
+                            <div class="box-s">
+                                <div>{$total['rate']}</div>
+                                <div>累计错题率</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row garde">
+                <div class="col">
+                    <div class="error-details grade-details" style="margin-top: 20px;">
+                        <div class="box-title">
+                            <span>年</span><span>级</span><span>选</span><span>择</span>
+                        </div>
+                        {volist name="grade" id="vo" key="index"}
+                            <dl class="grade-box{if($index==1)} active {/if}" data-id="{$vo.id}">{$vo.name}</dl>
+                        {/volist}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="error-details">
+                        <div class="box-title">
+                            <span>学</span><span>科</span><span>选</span><span>择</span>
+                        </div>
+                        {volist name="subject" id="vo"}
+                            <div class="details-box" data-id="{$vo.id}">
+                                <div class="card-img">
+                                    <img src="{$vo.img}" class="img-fluid">
+                                    <dl class="txt">{$vo.name}</dl>
+                                </div>
+                            </div>
+                        {/volist}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="error-details" style="margin-top: 20px;">
+                        <div class="box-title">
+                            <span>章</span><span>节</span><span>选</span><span>择</span>
+                        </div>
+                        <div class="chapter">
+                            <ul class="chapter-ul">
+                                <li>请选择科目</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="error-book" id="error-book">
+        <div class="container book">
+            <div class="close">X</div>
+            <div class="row">
+                <div class="col clear-padding-row">
+                    <div class="book-title">错题集</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col error-paper">
+                    <ul></ul>
+                </div>
+            </div>
+            <div class="row page">
+                <div class="col offset-5">
+                    <ul class="pagination pagination-sm">
+
+                    </ul>
+                </div>
+            </div>
+            <input type="hidden" value="" id="cid">
+        </div>
+    </div>
+    <div class="book-detail">
+        <div class="container">
+            <div class="detail-close">我会了</div>
+            <div class="row">
+                <div class="col">
+                    <div class="paper-box">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 底部 -->
+    {include file="base/footer"}
+    <script src="__STATIC__/index/js/modal_dialog.js"></script>
+    <script>
+        $('.grade-details').click(function (event) {
+            if (event.target.nodeName === 'DL') {
+                $(event.target).addClass('active')
+                $(event.target).siblings().removeClass('active')
+            }
+        })
+
+        //关闭弹窗
+        $('.close').click(function () {
+            $('.error-book').hide()
+        })
+        $('.detail-close').click(function () {
+            $('.book-detail').hide()
+        })
+
+        //点击章节,获取习题
+        $('.chapter ul').click(function (event) {
+            if (event.target.nodeName == "LI") {
+                let cid = $(event.target).data('id')
+                $('#cid').val(cid)
+                $.ajax({
+                    type: 'get',
+                    url: '{:url("exam/getExercise")}',
+                    data: {cid},
+                    dataType: 'json',
+                    success: (res)=>{
+                        let code = res.code
+                        let msg = res.msg
+                        if(code == 200){
+                            let current = 1;
+                            let data = res.data
+                            let page = res.page
+                            let html = ''
+                            let pageList = []
+
+                            data.forEach((item)=>{
+                                html += '<li data-id="'+item.id+'">'+item.title+'</li>'
+                            })
+                            $('.error-paper ul').html(html)
+                            for (let i=1;i<page.pageList;i++)
+                            {
+                                pageList.push('<li class="page-item" data-id="'+i+'"><a class="page-link" onclick="page('+i+')">'+i+'</a></li>')
+                            }
+
+                            pageList.forEach((item,index)=>{
+                                if (index == current-1){
+                                    pageList[index]=item.replace('page-item', 'page-item active')
+                                }
+                            })
+                            pageList = pageList.toString().replace(',','')
+                            let pages = '<li class="page-item"><a class="page-link" onclick="prev()">上一页</a></li>'+pageList+'<li class="page-item"><a class="page-link" onclick="next()">下一页</a></li>'
+                            $('.pagination').html(pages)
+
+                        }else {
+                            $('.error-paper ul').html('<li>msg</li>')
+                            message({icon:'error',content:msg})
+                        }
+                    }
+                })
+                $('.error-book').show()
+            }
+        })
+        //点击试题
+        $('.error-paper ul').click(function (event) {
+            console.log(event.target.nodeName)
+            if (event.target.nodeName == "P") {
+                // console.log($(event.target).parent().data('id'))
+                let eid = $(event.target).parent().data('id')
+                $.ajax({
+                    type: 'get',
+                    url: '{:url("exam/getExerciseInfo")}',
+                    data: {eid},
+                    dataType: 'json',
+                    success: (res)=>{
+                        let code = res.code
+                        let msg = res.msg
+                        let html = ''
+                        if(code == 200){
+                            let data = res.data
+                            html = `
+                                    <div class="paper-title">${data.title}</div>
+                                    <div class="paper-option">A.${data.optionA}</div>
+                                    <div class="paper-option">B.${data.optionB}</div>
+                                    <div class="paper-option">C.${data.optionC}</div>
+                                    <div class="paper-option">D.${data.optionD}</div>
+                                    <div class="paper-answer text-success">正确选项：${data.answer}</div>
+                                    <div class="paper-answer text-danger">您的选择：${data.select_option}</div>
+                                    <div class="paper-answer">解析：${data.remake}</div>
+                                `
+                            $('.paper-box').html(html)
+                        }else {
+                            html = msg
+                            $('.paper-box').html(html)
+                        }
+                    }
+                })
+                $('.book-detail').show()
+            }
+        })
+
+        //点击科目，切换样式
+        $('.details-box').click(function (event) {
+            $(event.target).addClass('actives')
+            $(this).addClass('blue')
+            $(this).prevAll().removeClass('blue')
+            $(this).nextAll().removeClass('blue')
+            let obj = $(event.target).parent()
+            let next = obj.parent().nextAll().children()    //之前全部图片节点
+            let pre = obj.parent().prevAll().children()     //之后全部图片节点
+            next.children().removeClass('actives')
+            pre.children().removeClass('actives')
+            // console.log(next.children())
+            // console.log(pre.children())
+            //获取章节信息
+            let grade //年级
+            let subject
+            $('.grade-details dl').each(function () {
+                // console.log($(this).hasClass('active'))
+                if ($(this).hasClass('active')){
+                    grade = $(this).data('id')
+                }
+            })
+
+            if (grade==''){
+                message({icon:'error',content:'请选择年级'})
+            }else{
+                subject = $(this).data('id')
+                //获取章节信息
+                $.ajax({
+                    type: 'get',
+                    url: '{:url("exam/getChapter")}',
+                    data: {grade,subject},
+                    dataType: 'json',
+                    success: (res)=>{
+                        let code = res.code
+                        let msg = res.msg
+                        if(code == 200){
+                            let data = res.data
+                            let html = ''
+                            data.forEach((item)=>{
+                                html += '<li data-id="'+item.chapterID+'">'+item.chapterName+'</li>'
+                            })
+                            $('.chapter-ul').html(html)
+                        }else {
+                            message({icon:'error','content':msg})
+                            $('.chapter-ul').html('<li>'+msg+'</li>')
+                        }
+                    }
+                })
+            }
+        })
+
+    </script>
+
+    <!-- 分页-->
+    <script>
+        function page(current) {
+            let cid = $('#cid').val()
+            $.ajax({
+                type: 'get',
+                url: '{:url("exam/page")}',
+                data: {cid,current},
+                dataType: 'json',
+                success: (res)=>{
+                    console.log(res)
+                    let code = res.code
+                    let msg = res.msg
+                    if(code == 200){
+                        let data = res.data
+                        let html = ''
+                        data.forEach((item)=>{
+                            html += '<li data-id="'+item.id+'">'+item.title+'</li>'
+                        })
+                        $('.error-paper ul').html(html)
+                        $('.pagination li').each((index,item)=>{
+                            if(index == current){
+                                console.log(item)
+                                $(item).addClass('active')
+                                $(item).siblings().removeClass('active')
+                            }
+                        })
+
+                    }
+                }
+            })
+        }
+
+        //上一页
+        function prev() {
+            let current=-1
+            $('.pagination li').each((index,item)=>{
+                if ($(item).hasClass('active')){
+                    current = $(item).data('id')-1
+                }
+            })
+            if(current > 0){
+                page(current)
+            }
+        }
+
+        //下一页
+        function next() {
+            let current=-1
+            $('.pagination li').each((index,item)=>{ //0 1
+                if ($(item).hasClass('active')){
+                    current = $(item).data('id')+1
+                    if (current>index+1){
+                        current = -1    //下一页不存在
+                    }
+                }
+            })
+            if(current > 0){
+                page(current)
+            }
+        }
+    </script>
+</body>
+
+</html>

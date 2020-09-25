@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>勤藤名师</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/header.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/style.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/index/index.css">
+</head>
+
+<body>
+    {include file="base/header"}
+    <!--课堂名师 start-->
+    <div class="teacher">
+        <div class="container">
+            <h2>勤藤名师</h2>
+            <br />
+            <div class="row">
+                {volist name="teacher" id="vo"}
+                    <div class="col-4">
+                        <div class="card lx">
+                            <img class="card-img-top" src="{$vo.img}" alt="{$vo.name}"
+                                style="width:100%">
+                            <div class="card-body">
+                                <span class="ctag">{$vo.subject}</span>
+                                <div class="details">&nbsp;&nbsp;
+                                    {$vo.remake}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {/volist}
+                
+            </div>
+        </div>
+    </div>
+    <!--课堂名师 end-->
+    {include file="base/footer"}
+</body>
+
+</html>

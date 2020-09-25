@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0 maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- 日历 -->
+    <link href="__LIB__/bootstrap/dist/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+    <link href="__LIB__/bootstrap/dist/css/yk-datepicker.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/member/info.css">
+</head>
+
+<body>
+    <div class="info-detail">
+        <div class="info-title">基本信息<span id="userEdit">修改</span><span id="cancel">取消</span></div>
+        <hr />
+        <div class="info-box">
+            <table align="center">
+                <tr>
+                    <td align="right">用户头像：</td>
+                    <td width="120">
+                        {empty name="member['head_img']"}
+                        <img src="/static/index/images/face_default.jpg" data-toggle="modal" data-target="#myModal" class="t_img">
+                        {else /}
+                        <img src="{$member['head_img']}" data-toggle="modal" data-target="#myModal" class="t_img">
+                        {/empty}
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">手机号码：</td>
+                    <td>{$member['phone']|default="未知"}</td>
+                </tr>
+                <tr>
+                    <td align="right">邮箱：</td>
+                    <td><input type="email" name="email" id="email" value="{$member['email']|default=''}" readonly></td>
+                </tr>
+                <tr>
+                    <td align="right">生日：</td>
+                    <td>
+                        <div class="deft">{$member['birthday']|default=''}</div>
+                        <div class="form-group">
+                            <div class="input-group date" data-date="" data-date-format="hh:ii"
+                                data-link-field="dtp_input3" data-link-format="hh:ii">
+                                <span class="input-group-addon"></span>
+                                <input class="form-control form_YMD" size="16" type="text" id="birthday" value="2000-1-1" readonly>
+                            </div>
+                            <input type="hidden" id="dtp_input3" value="" /><br />
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">身份证号码：</td>
+                    <td><input type="text" name="cardID" id="cardID" value="{$member['cardID']|default=''}" readonly></td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <input type="hidden" id="id" value="{$member['id']}" /><br />
+                        <button id="save" onclick="userSave()" class="btn btn-success text-white">保存</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- 模态框 -->
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- 模态框头部 -->
+                <div class="modal-header">
+                    <h4 class="modal-title">修改头像</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- 模态框主体 -->
+                <div class="modal-body">
+                    <div class="container">
+                        <form action='' id="form1" enctype="multipart/form-data" method="post">
+                            <div class="row">
+                                <div class="col">
+                                    <input type="file" id="head" name="image" /></div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <button type="button" class="btn btn-primary" id="submit"
+                                        style="float:right">修改</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 模态框底部 -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="pwdUpdate">
+        <div class="info-title">修改密码</div>
+        <hr>
+        <table align="center">
+            <tr>
+                <td align="right">请输入新密码：</td>
+                <td><input type="password" name="pwd1" id="pwd1"></td>
+            </tr>
+            <tr>
+                <td align="right">请确认密码：</td>
+                <td><input type="password" name="pwd2" id="pwd2"></td>
+            </tr>
+            <tr>
+                <td align="right">请输入手机号码：</td>
+                <td><input type="tel" name="phone" id="phone"></td>
+            </tr>
+            <tr>
+                <td align="right">请输入验证码：</td>
+                <td><input type="text" name="code" id="code"><span class="msg">发送验证码</span></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><button id="update" onclick="updatePwd()" class="btn btn-primary text-white ">修改</button></td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript" src="__LIB__/bootstrap/dist/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="__LIB__/bootstrap/dist/js/locales/bootstrap-datetimepicker.fr.js"
+        charset="UTF-8"></script>
+    <script type="text/javascript" src="__LIB__/bootstrap/dist/js/yk-datepicker.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="__LIB__/bootstrap/dist/js/index.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="__STATIC__/index/js/modal_dialog.js"></script>
+    <script>
+        $(function () {
+            $('#save').hide()
+        })
+        // 输入框设置
+        //修改
+        $('#userEdit').click(function () {
+            $('.info-detail input').attr('readonly', false)
+            $('.info-detail input').css('border-bottom', '1px solid #000')
+            $('#save').show()
+            $('.deft').hide()
+            $('.form-group').show()
+            $('#cancel').show()
+            $('#userEdit').hide()
+        })
+        //取消
+        $('#cancel').click(function () {
+            $('.info-detail input').attr('readonly', true)
+            $('.info-detail input').css({'outline':'none','border':'none'})
+            $('#save').hide()
+            $('.form-group').hide()
+            $('.deft').show()
+            $('#userEdit').show()
+            $('#cancel').hide()
+        })
+
+        //上传头像
+        $('#submit').click(function () {
+            let form = $('#form1')
+            $.ajax({
+                type: 'post',
+                url: '{:url("Member/uploadImg")}',
+                data: new FormData(form[0]),
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                success: (res) => {
+                    let code = res.code
+                    let msg = res.msg
+                    if(code == 0){
+                        message({
+                            icon: 'success',
+                            content: msg
+                        })
+                        window.location.reload()
+                    }else {
+                        message({
+                            icon: 'error',
+                            content: msg
+                        })
+                    }
+
+                }
+            })
+        })
+
+        //保存用户信息修改
+        function userSave(){
+            let flag = true
+            let email = $('#email').val()
+            let id = $('#id').val()
+            let birthday = $('#birthday').val()
+            let cardID = $('#cardID').val()
+            var emailReg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+            const regIdCard = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+            // 验证邮箱
+            if (email != ''){
+                if(!emailReg.test(email)){
+                    message({
+                        icon: 'error',
+                        content: '邮箱格式错误'
+                    })
+                    flag = false
+                }else {
+                    flag = true
+                }
+            }
+            // 身份证
+            if (cardID != ''){
+                if (!regIdCard.test(cardID)) {
+                    message({
+                        icon: 'error',
+                        content: '身份证格式错误'
+                    })
+                    flag = false
+                }else {
+                    flag = true
+                }
+            }
+
+            if(flag){
+                $.ajax({
+                    type: 'post',
+                    url: '{:url("member/update")}',
+                    data: {email,birthday,cardID,id},
+                    dataType: 'json',
+                    success: (res)=>{
+                        let code = res.code
+                        let msg = res.msg
+                        if(code == 200){
+                            $('#email').val(email)
+                            $('#birthday').val(birthday)
+                            $('#cardID').val(cardID)
+                            $('.info-detail input').attr('readonly', true)
+                            $('.info-detail input').css({'outline':'none','border':'none'})
+                            $('#save').hide()
+                            $('.form-group').hide()
+                            $('.deft').show()
+                            $('#userEdit').show()
+                            $('#cancel').hide()
+                        }else {
+                            message({
+                                icon: 'error',
+                                content: msg
+                            })
+                        }
+
+
+
+                    }
+                })
+            }
+        }
+        $('#update').attr('disabled',true) //禁用修改按钮
+        let pwdisfirst = true
+        //密码验证
+        $('#pwd1').blur(function () {
+            let pwd1 = $('#pwd1').val()
+            if(pwd1 == ''){
+                message({icon: 'warning',content: '密码不能为空'})
+                $('#update').attr('disabled',true)
+                if (pwdisfirst){
+                    $('#pwd1').focus()
+                }
+                pwdisfirst = false
+            }else if (pwd1.length < 6) {
+                message({icon: 'warning',content: '密码不能小于6位'})
+            }
+        })
+
+        let pwd2isfirst = true
+        //确认密码验证
+        $('#pwd2').blur(function () {
+
+            let pwd1 = $('#pwd1').val()
+            let pwd2 = $('#pwd2').val()
+            if(pwd2 == ''){
+                message({icon: 'warning',content: '确认密码不能为空'})
+                $('#update').attr('disabled',true)
+                if (pwd2isfirst==true){
+                    $('#pwd2').focus()
+                }
+                pwd2isfirst = false
+            }else if (pwd1 != pwd2){
+                message({icon: 'warning',content: '两次密码不一致'})
+                $('#update').attr('disabled',true)
+            }else{
+                $('#update').attr('disabled',false)
+            }
+        })
+
+        //手机验证
+        $('#phone').blur(function () {
+            let phone = $('#phone').val()
+            let id = $('#id').val()
+            if(phone == ''){
+                message({icon: 'warning',content: '手机号码不能为空'})
+                $('#update').attr('disabled',true)
+            }else {
+                $.ajax({
+                    type: 'get',
+                    url: '{:url("member/checkPhone")}',
+                    data: {phone,id},
+                    dataType: 'json',
+                    success: (res)=>{
+                        let code = res.code
+                        let msg = res.msg
+                        if(code == 200){
+                            message({icon: 'success',content: msg})
+                            $('#update').attr('disabled',false)
+                        }else {
+                            message({icon: 'success',content: msg})
+                            $('#update').attr('disabled',true)
+                        }
+                    }
+                })
+                $('#update').attr('disabled',false)
+            }
+        })
+        
+        //发送验证码
+        $('.msg').click(function () {
+            let phone = $('#phone').val()
+            var time= 60
+            if (phone != '') {
+                $.ajax({
+                    type: 'get',
+                    url: '{:url("member/getCode")}',
+                    data: {phone},
+                    dataType: 'json',
+                    success: (res) => {
+                        console.log(res)
+                        let code = res.code
+                        let content = res.msg
+                        // 倒计时
+                        if(code == "OK"){
+                            var interval = setInterval(function(){
+                                time--;
+                                if(time<=0){
+                                    clearInterval(interval);
+                                    var html = '获取验证码';
+                                    $('.msg').prop('disabledd',false);
+                                } else{
+                                    var html = time + ' 秒后再次获取';
+                                    $('.msg').prop('disabledd',true);
+                                }
+                                $('.msg').text(html);
+                            },1000);
+
+                            message({
+                                icon: 'success',
+                                content: '短信发送成功'
+                            })
+
+                        }else{
+
+                            message({
+                                icon: 'error',
+                                content
+                            })
+
+                        }
+
+                    },
+                })
+            } else {
+                message({
+                    icon: 'error',
+                    content: '手机号码不能为空'
+                })
+            }
+        })
+
+        // 校验验证码
+        $('#code').blur(function () {
+            let code = $('#code').val();
+            let phone = $('#phone').val();
+            $.ajax({
+                type: 'post',
+                url: '{:url("member/getCode")}',
+                data: {phone,code},
+                dataType: 'json',
+                success: (res) => {
+                    let code = res.code
+                    let msg = res.msg
+                    if(code == 200){
+                        message({icon:'success',content:msg})
+                        $('#update').attr('disabled',false)
+                    }else{
+                        message({icon:'error',content:msg})
+                        $('#update').attr('disabled',true)
+                    }
+                }
+            })
+        })
+
+
+        function updatePwd() {
+            let id = $('#id').val()
+            let pwd1 = $('#pwd1').val()
+            let pwd2 = $('#pwd2').val()
+            if(pwd1 != '' && pwd2 != ''){
+                $.ajax({
+                    type: 'post',
+                    url: '{:url("member/updatePwd")}',
+                    data: {pwd1,id},
+                    dataType: 'json',
+                    success: (res)=>{
+                        let code = res.code
+                        let msg = res.msg
+                        if(code == 200){
+                            message({icon:'success',content: msg})
+                            $('#pwd1').val('')
+                            $('#pwd2').val('')
+                            $('#phone').val('')
+                            $('#code').val('')
+                        }else {
+                            message({icon:'error',content: msg})
+                            $('#pwd1').val('')
+                            $('#pwd2').val('')
+                        }
+                    }
+                })
+            }
+        }
+    </script>
+
+</body>
+
+</html>

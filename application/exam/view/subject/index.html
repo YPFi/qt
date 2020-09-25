@@ -1,0 +1,68 @@
+{extend name='admin@main'}
+
+{block name="button"}
+
+{if auth("exam/subject/add")}
+<button data-modal='{:url("add")}' data-title="添加科目" class='layui-btn layui-btn-sm layui-btn-primary'>添加科目</button>
+{/if}
+
+{if auth("exam/subject/remove")}
+<button data-action='{:url("remove")}' data-rule="id#{key}" class='layui-btn layui-btn-sm layui-btn-primary'>删除科目</button>
+{/if}
+
+{/block}
+
+{block name="content"}
+<div class="think-box-shadow">
+    {include file='subject/search'}
+    <table class="layui-table margin-top-10" lay-skin="line">
+        {notempty name='list'}
+        <thead>
+        <tr>
+            <th class='list-table-check-td think-checkbox'>
+                <input data-auto-none data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class='text-center nowrap'>科目名称</th>
+            <th class='text-center nowrap'>创建时间</th>
+            <th class="text-center">状态</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        {/notempty}
+        <tbody>
+        {foreach $list as $key=>$vo}
+        <tr data-dbclick>
+            <td class='list-table-check-td think-checkbox'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class='text-center nowrap'>{$vo.name|default=''}</td>
+            <td class='text-center nowrap'>{$vo.create_at|format_datetime}</td>
+            <td class='text-center nowrap'>
+                {eq name='vo.status' value='1'}启用{else}禁用{/eq}<br>
+            </td>
+            <td class='text-center nowrap'>
+
+                {if auth("exam/subject/edit")}
+                <a data-dbclick data-title="编辑科目" class="layui-btn layui-btn-xs" data-modal='{:url("edit")}?id={$vo.id}'>编 辑</a>
+                {/if}
+
+                {if $vo.status eq 1 and auth("exam/subject/forbid")}
+                <a class="layui-btn layui-btn-xs layui-btn-warm" data-action="{:url('forbid')}" data-value="id#{$vo.id};status#0">禁 用</a>
+                {elseif auth("store/subject/resume")}
+                <a class="layui-btn layui-btn-xs layui-btn-warm" data-action="{:url('resume')}" data-value="id#{$vo.id};status#1">启 用</a>
+                {/if}
+
+                {if auth("exam/subject/remove")}
+                <a class="layui-btn layui-btn-xs layui-btn-danger" data-confirm="确定要删除数据吗?" data-action="{:url('remove')}" data-value="id#{$vo.id}">删 除</a>
+                {/if}
+
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {empty name='list'}<span class="notdata">没有记录哦</span>{else}
+    {$pagehtml|raw|default=''}
+    {/empty}
+</div>
+{/block}

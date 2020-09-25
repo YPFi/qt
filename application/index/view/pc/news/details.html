@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{$title}</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/header.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/style.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/news/details.css">
+</head>
+
+<body>
+    <!-- 头部 -->
+    {include file="base/header"}
+    <div class="box clear-padding-row container-fluid">
+        <div class="container">
+            <div class="row">
+                <div class="col-9">
+                    <div class="row news-bar">
+                        <div class="col-8">
+                            <div class="squared"></div>
+                            <div class="bar-title">{$news['name']}</div>
+                        </div>
+                        <div class="col-4 text-right">
+                            <span class="glyphicon glyphicon-tags key-tag"></span>&nbsp;
+                            {notempty name="keywords"}
+                                {volist name="keywords" id="vo"}
+                                    <a href="{:url('news/keyword')}?key={$vo}">{$vo}</a>&nbsp;
+                                {/volist}
+                            {/notempty}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            {notempty name="prev"}
+                                <a href="{:url('news/details')}?id={$prev}"><span class="left">上一篇</span></a>
+                            {/notempty}
+                            {empty name="prev"}
+                                <span class="left">没有了</span>
+                            {/empty}
+                            {notempty name="next"}
+                                <a href="{:url('news/details')}?id={$next}"><span class="right">下一篇</span></a>
+                            {/notempty}
+                            {empty name="next"}
+                                <span class="right">没有了</span>
+                            {/empty}
+                        </div>
+                    </div>
+                    <div class="row new-title">
+                        <div class="col text-center">
+                            {$news['title']}
+                            <p class="text-secondary">
+                                时间：{$news['create_at']}
+                                阅读次数：{$news['readNum']}
+                                作者：{$news['author']}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row new-detail">
+                        <div class="col">
+                            {$news['content']|raw}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="nav-hot">
+                        <div class="hot-top">
+                            <div style="height: 10px;"></div>
+                            <div class="squared2"></div>
+                            &nbsp;热点资讯&nbsp;<span class="glyphicon glyphicon-fire text-danger"></span>
+                        </div>
+                        <div class="hot-ul">
+                            <ul>
+                                {volist name="hot" id="vo"}
+                                    <li><a href="{:url('news/details')}?id={$vo.id}"><span style="color: red;">*</span>&nbsp;{$vo.title}</a></li>
+                                {/volist}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="nav-new">
+                        <div class="hot-top">
+                            <div style="height: 10px;"></div>
+                            <div class="squared2"></div>&nbsp;最新资讯
+                            &nbsp;<span class="glyphicon glyphicon-time text-warning"></span>
+                        </div>
+                        <div class="new-ul">
+                            <ul>
+                                {volist name="now" id="vo"}
+                                    <li><a href="{:url('news/details')}?id={$vo.id}"><img src="{$vo.img}">&nbsp;{$vo.title}</a></li>
+                                {/volist}
+                            </ul>
+                        </div>
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 底部 -->
+    {include file="base/footer"}
+</body>
+
+</html>

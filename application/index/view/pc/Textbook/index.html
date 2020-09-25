@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>电子教材</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/header.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/style.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/textbook.css">
+</head>
+
+<body>
+    <!-- 头部 -->
+    {include file="base/header"}
+    <div class="book-box">
+        <div class="container">
+            <div class="row">
+                <div class="col title">
+                    <img src="__STATIC__/index/images/textbook/title.png" class="img-fluid">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col grade">
+                    <img src="__STATIC__/index/images/textbook/primary.png" class="img-fluid">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col bookList">
+                    <ul>
+                        {volist name="primary" id="vo"}
+                            <li><a href="{:url('Textbook/ebook')}?id={$vo.id}" target="_blank">{$vo.name}</a></li>
+                        {/volist}
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col grade">
+                    <img src="__STATIC__/index/images/textbook/middle.png" class="img-fluid">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col bookList">
+                    <ul>
+                        {volist name="middle" id="vo"}
+                            <li><a href="{:url('Textbook/ebook')}?id={$vo.id}" target="_blank">{$vo.name}</a></li>
+                        {/volist}
+                    </ul>
+                </div>
+            </div>
+<!--            <diV class="row book-shadows-row">-->
+<!--                <div class="col-5 book-shadows offset-2">-->
+<!--                    常见问题与解答-->
+<!--                </div>-->
+<!--                <div class="col-5 book-shadows">-->
+<!--                    统编教材使用答疑-->
+<!--                </div>-->
+<!--            </diV>-->
+        </div>
+    </div>
+    
+    <!-- 底部 -->
+    {include file="base/footer"}
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+{extend name='admin@main'}
+
+{block name="button"}
+
+{if auth("exam/Member/add")}
+<button data-modal='{:url("vipAdd")}' data-title="添加会员" class='layui-btn layui-btn-sm layui-btn-primary'>添加VIP类型</button>
+{/if}
+
+{if auth("exam/Member/remove")}
+<button data-action='{:url("removeVIP")}' data-rule="id#{key}" class='layui-btn layui-btn-sm layui-btn-primary'>删除VIP类型</button>
+{/if}
+
+{/block}
+
+{block name="content"}
+<div class="think-box-shadow">
+    <table class="layui-table margin-top-10" lay-skin="line">
+        {notempty name='list'}
+        <thead>
+        <tr>
+            <th class='list-table-check-td think-checkbox'>
+                <input data-auto-none data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class='text-center nowrap'>VIP名称</th>
+            <th class='text-center nowrap'>编码</th>
+            <th class="text-center">金额</th>
+            <th class="text-center">描述</th>
+            <th class="text-center">状态</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        {/notempty}
+        <tbody>
+        {foreach $list as $key=>$vo}
+        <tr data-dbclick>
+            <td class='list-table-check-td think-checkbox'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class='text-center nowrap'>{$vo.name|default=''}</td>
+            <td class='text-center nowrap'>{$vo.code|default=''}</td>
+            <td class='text-center nowrap'>{$vo.money|default='0'}</td>
+            <td class='text-center nowrap'>{$vo.remark|default='0'}</td>
+            <td class='text-center nowrap'>
+                {eq name='vo.status' value='1'}启用{else}禁用{/eq}<br>
+            </td>
+            <td class='text-center nowrap'>
+
+                {if auth("exam/Member/editVIP")}
+                <a data-dbclick data-title="编辑VIP类型" class="layui-btn layui-btn-xs" data-modal='{:url("editVIP")}?id={$vo.id}'>编 辑</a>
+                {/if}
+
+                {if $vo.status eq 1 and auth("exam/Member/forbidVIP")}
+                <a class="layui-btn layui-btn-xs layui-btn-warm" data-action="{:url('forbidVIP')}" data-value="id#{$vo.id};status#0">禁 用</a>
+                {elseif auth("exam/Member/resumeVIP")}
+                <a class="layui-btn layui-btn-xs layui-btn-warm" data-action="{:url('resumeVIP')}" data-value="id#{$vo.id};status#1">启 用</a>
+                {/if}
+
+                {if auth("exam/Member/removeVIP")}
+                <a class="layui-btn layui-btn-xs layui-btn-danger" data-confirm="确定要删除数据吗?" data-action="{:url('removeVIP')}" data-value="id#{$vo.id}">删 除</a>
+                {/if}
+
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {empty name='list'}<span class="notdata">没有记录哦</span>{else}
+    {$pagehtml|raw|default=''}
+    {/empty}
+</div>
+{/block}

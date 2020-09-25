@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{$title}</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/header.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/style.css">
+    <link rel="stylesheet" href="__STATIC__/index/css/mobile/style.css" />
+    <link rel="stylesheet" href="__STATIC__/index/css/fonts.css" />
+    <link rel="stylesheet" href="__STATIC__/index/css/mobile/detail.css" />
+    <link rel="stylesheet" href="__STATIC__/index/css/exam/radio.css" />
+</head>
+
+<body>
+    <!-- 头部 -->
+    {include file="base/header"}
+    <div class="exam-box">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <h3>{$nav['grade']}{$nav['subject']}·{$nav['chapter']}</h3>
+                </div>
+            </div>
+            {volist name="page" id="vo" key="index"}
+            <div class="row text-contents">
+                <div class="col-12 title">{$index}.{$vo.title|raw}</div>
+                <div class="col options">
+                    <input type="radio" name="option{$index}" value="{$vo.id}_A" id="option{$index}A" disabled="true">
+                    <label for="option{$index}A">A.{$vo.optionA|raw}</label>
+                </div>
+                <div class="col-12 options">
+                    <input type="radio" name="option{$index}" value="{$vo.id}_B" id="option{$index}B" disabled="true">
+                    <label for='option{$index}B'>B.{$vo.optionB|raw}</label>
+                </div>
+                <div class="col-12 options">
+                    <input type="radio" name="option{$index}" value="{$vo.id}_C" id="option{$index}C" disabled="true">
+                    <label for='option{$index}C'>C.{$vo.optionC|raw}</label>
+                </div>
+                <div class="col-12 options">
+                    <input type="radio" name="option{$index}" value="{$vo.id}_D" id="option{$index}D" disabled="true">
+                    <label for='option{$index}D'>D.{$vo.optionD|raw}</label>
+                </div>
+                <div class="col-12 exam-detail">
+                    <div class="success text-success">正确选项：{$vo.right_option|raw}</div>
+                    <div class="error text-danger">您的选择：{$vo.select_option|raw}</div>
+                    <div class="analysis text-danger">解析：{$vo.remake|raw}</div>
+                </div>
+                <div class="col-12 clear-padding-col">
+                    <img src="__STATIC__/index/images/exam-bottom.png" class="img-fluid">
+                </div>
+            </div>
+            {/volist}
+            <div class="row" style="margin-bottom: 80px">
+                <div class="col">
+                    <div class="button-big"><a href="{:url('exam/details')}?id={$next['id']}" >继续做题<br/><span>({$next['name']})</span></a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {include file="base/footer"}
+</body>
+
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>新闻详情页</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/header.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/style.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/news/details.css">
+</head>
+
+<body>
+<!-- 头部 -->
+{include file="base/header"}
+<div class="box clear-padding-row container-fluid">
+    <div class="container">
+        <div class="row">
+            <div class="col-9">
+                <div class="row news-bar">
+                    <div class="col-8">
+                        <div class="squared"></div>
+                        <div class="bar-title">{$type}</div>
+                    </div>
+                    <div class="col-4 text-right">
+                        <span class="glyphicon glyphicon-tags key-tag"></span>&nbsp;
+                        {volist name="tags" id="vo"}
+                        <a href="#">{$vo}</a>
+                        {/volist}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <a href="#"><span class="left">上一篇</span></a>
+                        <a href="#"><span class="right">下一篇</span></a>
+                    </div>
+                </div>
+                <div class="row new-title">
+                    <div class="col text-center">
+                        {$title}
+                        <p class="text-secondary">
+                            时间：{$create_at} &emsp;
+                            阅读次数：0 &emsp;
+                            作者：{$author}
+                        </p>
+                    </div>
+                </div>
+                <div class="row new-detail">
+                    <div class="col">
+                        {notempty name='reprint'}<a href="{$reprint}" style="color: darkgreen">文章摘自：{$reprint}</a>{/notempty}
+                        {$content|raw}
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="nav-hot">
+                    <div class="hot-top">
+                        <div style="height: 10px;"></div>
+                        <div class="squared2"></div>
+                        &nbsp;热点资讯&nbsp;<span class="glyphicon glyphicon-fire text-danger"></span>
+                    </div>
+                    <div class="hot-ul">
+                        <ul>
+                            <li><a href="#"><span style="color: red;">*</span>&nbsp;教育是习惯培养的最佳时期</a></li>
+                            <li><a href="#"><span style="color: red;">*</span>&nbsp;教育是习惯培养的最佳时期</a></li>
+                            <li><a href="#"><span style="color: red;">*</span>&nbsp;教育是习惯培养的最佳时期</a></li>
+                            <li><a href="#"><span style="color: red;">*</span>&nbsp;教育是习惯培养的最佳时期</a></li>
+                            <li><a href="#"><span style="color: red;">*</span>&nbsp;教育是习惯培养的最佳时期</a></li>
+                            <li><a href="#"><span style="color: red;">*</span>&nbsp;教育是习惯培养的最佳时期</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="nav-new">
+                    <div class="hot-top">
+                        <div style="height: 10px;"></div>
+                        <div class="squared2"></div>&nbsp;最新资讯
+                        &nbsp;<span class="glyphicon glyphicon-time text-warning"></span>
+                    </div>
+                    <div class="new-ul">
+                        <ul>
+                            <li><a href="#"><img src="__STATIC__/index/images/checkImg/1.png">&nbsp;教育是习惯培养的最佳时期</a></li>
+                            <li><a href="#"><img src="__STATIC__/index/images/checkImg/2.png">&nbsp;教育是习惯培养的最佳时期</a></li>
+                            <li><a href="#"><img src="__STATIC__/index/images/checkImg/3.png">&nbsp;教育是习惯培养的最佳时期</a></li>
+                            <li><a href="#"><img src="__STATIC__/index/images/checkImg/4.png">&nbsp;教育是习惯培养的最佳时期</a></li>
+                            <li><a href="#"><img src="__STATIC__/index/images/checkImg/5.png">&nbsp;教育是习惯培养的最佳时期</a></li>
+                            <li><a href="#"><img src="__STATIC__/index/images/checkImg/1.png">&nbsp;教育是习惯培养的最佳时期</a></li>
+                            <li><a href="#"><img src="__STATIC__/index/images/checkImg/1.png">&nbsp;教育是习惯培养的最佳时期</a></li>
+                            <li><a href="#"><img src="__STATIC__/index/images/checkImg/1.png">&nbsp;教育是习惯培养的最佳时期</a></li>
+                        </ul>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 底部 -->
+{include file="base/footer"}
+</body>
+
+</html>

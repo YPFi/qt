@@ -1,0 +1,75 @@
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post" class='layui-form layui-card' autocomplete="off">
+
+    <div class="layui-card-body">
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">banner图</label>
+            <div class="layui-upload-drag" id="img">
+                <i class="layui-icon"></i>
+                <p>点击上传，或将文件拖拽到此处</p>
+                <div class="{if(!isset($vo.img))}layui-hide{/if}" id="uploadDemoView">
+                    <hr>
+                    <img src="{$vo.img|default=''}" alt="上传成功后渲染" style="max-width: 196px;max-height: 100px">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">分类</label>
+            <div class="layui-input-block">
+                <select name="type" lay-filter="type">
+                    <option value="1" selected="">顶部</option>
+                    <option value="0">底部</option>
+                    <option value="3">手机端</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">链接</label>
+            <div class="layui-input-block">
+                <input name="url" required value='{$vo.url|default=""}' lay-verify="required" placeholder="请填写banner链接" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <textarea placeholder="备注信息（选填）" class="layui-textarea" name="info">{$vo.info|default=''}</textarea>
+            </div>
+        </div>
+
+        <input type='hidden' value='{$vo.img|default=""}' name='img' id="imgUrl">
+
+    </div>
+
+    <div class="hr-line-dashed"></div>
+    {notempty name='vo.id'}<input type='hidden' value='{$vo.id}' name='id'>{/notempty}
+
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+</form>
+<script>
+    layui.use(['form','upload'], function () {
+        var form = layui.form;
+        var $ = layui.jquery
+            ,upload = layui.upload;
+        // var imgUrl = '' //图片路径
+        //拖拽上传
+        upload.render({
+            elem: '#img'
+            ,url: '{:url("@exam/images/upload")}' //改成您自己的上传接口
+            ,done: function(res){
+                layer.msg('上传成功');
+                layui.$('#uploadDemoView').removeClass('layui-hide').find('img').attr('src', res.data.src);
+                // console.log(res)
+                // imgUrl = res.data.src;
+                $('#imgUrl').val(res.data.src)
+            }
+        });
+        form.render()
+    })
+</script>

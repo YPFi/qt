@@ -1,0 +1,23 @@
+<div class="banner">
+    <div id="qzt" class="carousel slide" data-ride="carousel" data-interval="3000">
+        <!-- 指示符 -->
+        <ul class="carousel-indicators">
+            <li data-target="#qzt" data-slide-to="0" class="active banner"></li>
+            <li data-target="#qzt" data-slide-to="1" class="banner"></li>
+            <li data-target="#qzt" data-slide-to="2" class="banner"></li>
+            <li data-target="#qzt" data-slide-to="3" class="banner"></li>
+        </ul>
+        <!-- 轮播图片 -->
+        <div class="carousel-inner">
+            {volist name="topBanner" id="vo" key="index"}
+                <div class="carousel-item {if ($index==1)}active{/if}">
+                    <a href="{$vo.url}">
+                        <img src="{$vo.img}" class="img-fluid">
+                    </a>
+                </div>
+            {/volist}
+        </div>
+    </div>
+</div>
+
+<script src="__STATIC__/index/js/jqueryslider.js"></script>

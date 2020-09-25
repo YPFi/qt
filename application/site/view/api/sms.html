@@ -1,0 +1,79 @@
+{extend name='admin@main'}
+
+{block name="button"}
+
+{if auth("site/api/addSms")}
+<button data-modal='{:url("addLoginSms")}' data-title="添加登录API" class='layui-btn layui-btn-sm layui-btn-primary'>添加阿里云短信模板</button>
+{/if}
+
+{if auth("site/api/removeSms")}
+<button data-action='{:url("removeLoginSms")}' data-rule="id#{key}" class='layui-btn layui-btn-sm layui-btn-primary'>删除阿里云短信模板</button>
+{/if}
+
+{/block}
+
+{block name="content"}
+<div class="think-box-shadow">
+    {include file='api/search'}
+    <table class="layui-table margin-top-10" lay-skin="line">
+        {notempty name='list'}
+        <thead>
+        <tr>
+            <th class='list-table-check-td think-checkbox'>
+                <input data-auto-none data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class='text-center nowrap'>模板类型</th>
+            <th class="text-center nowrap">模板名称</th>
+            <th class="text-center">创建时间时间</th>
+            <th class="text-center">状态</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        {/notempty}
+        <tbody>
+        {foreach $list as $key=>$vo}
+        <tr data-dbclick>
+            <td class='list-table-check-td think-checkbox'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class='text-center nowrap'>
+                {switch vo.type}
+                    {case 1}用户注册验证码{/case}
+                    {case 2}登录异常验证码{/case}
+                    {case 3}登录确认验证码{/case}
+                    {case 4}身份验证验证码{/case}
+                    {case 5}充值提醒{/case}
+                    {case 6}勤藤币积分{/case}
+                    {case 7}合作伙伴验证码{/case}
+                    {case 8}做题情况提醒{/case}
+                {/switch}
+            </td>
+            <td class='text-center nowrap'>{$vo.templateCode|default=''}</td>
+            <td class='text-center nowrap'>{$vo.create_at|format_datetime}</td>
+            <td class='text-center nowrap'>
+                {eq name='vo.status' value='0'}<span class="layui-badge">已禁用</span>{else}<span class="layui-badge layui-bg-green">使用中</span>{/eq}<br>
+            </td>
+            <td class='text-center nowrap'>
+
+                {if auth("site/api/editSms")}
+                <a data-dbclick data-title="编辑登录API" class="layui-btn layui-btn-xs" data-modal='{:url("editSms")}?id={$vo.id}'>编 辑</a>
+                {/if}
+
+                {if $vo.status eq 1 and auth("site/api/forbidSms")}
+                <a class="layui-btn layui-btn-xs layui-btn-warm" data-action="{:url('forbidSms')}" data-value="id#{$vo.id};status#0">禁 用</a>
+                {elseif auth("site/api/resumeSms")}
+                <a class="layui-btn layui-btn-xs layui-btn-warm" data-action="{:url('resumeSms')}" data-value="id#{$vo.id};status#1">启 用</a>
+                {/if}
+
+                {if auth("site/api/removeSms")}
+                <a class="layui-btn layui-btn-xs layui-btn-danger" data-confirm="确定要删除数据吗?" data-action="{:url('removeSms')}" data-value="id#{$vo.id}">删 除</a>
+                {/if}
+
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {empty name='list'}<span class="notdata">没有记录哦</span>{else}{$pagehtml|raw|default=''}{/empty}
+</div>
+{/block}

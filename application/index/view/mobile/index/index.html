@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0 maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{$title}</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/mobile/index.css" />
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/fonts.css" />
+    <!-- 侧边导航 -->
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/nav.css">
+    <!-- 滚动条 -->
+    <script src="https://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+    <script type="text/javascript" src="__STATIC__/index/js/zUI.js"></script>
+    <script>
+        $(function () {
+            $(".content1").panel({
+                iWheelStep: 32
+            });
+            $(".content2").panel({
+                iWheelStep: 32
+            });
+            $(".ves").panel({
+                iWheelStep: 32
+            });
+        });
+    </script>
+</head>
+
+<body>
+    {include file="base/header"}
+    <div class="navBar">
+        <div class="container">
+            <div class="row">
+                <div class="col-3"><a href="{:url('exam/index')}"><img src="__STATIC__/index/images/mobile/xtk.png"
+                            class="img-fluid"></a></div>
+                <div class="col-3"><a href="{:url('news/index')}"><img src="__STATIC__/index/images/mobile/zx.png"
+                            class="img-fluid"></a></div>
+                <div class="col-3"><a href="#course"><img src="__STATIC__/index/images/mobile/spk.png"
+                            class="img-fluid"></a></div>
+                {empty name="Think.session.member"}
+                <div class="col-3"><a href="{:url('login/index')}"><img src="__STATIC__/index/images/mobile/zc.png"
+                            class="img-fluid"></a></div>
+                {else /}
+                <div class="col-3"><a href="{:url('member/index')}"><img src="__STATIC__/index/images/mobile/sqhz.png"
+                    class="img-fluid"></a></div>
+                {/empty}
+                <div class="col-12" style="height: 20px;"></div>
+                <div class="col-3"><a href="{:url('recharge/index')}"><img src="__STATIC__/index/images/mobile/cz.png"
+                            class="img-fluid"></a></div>
+                <div class="col-3"><a href="#course"><img src="__STATIC__/index/images/mobile/spk.png"
+                            class="img-fluid"></a></div>
+                <div class="col-3"><a href="{:url('contact/index')}"><img src="__STATIC__/index/images/mobile/yjfk.png"
+                            class="img-fluid"></a></div>
+                <div class="col-3"><a href="{:url('textbook/index')}"><img src="__STATIC__/index/images/mobile/dzjc.png"
+                            class="img-fluid"></a></div>
+            </div>
+        </div>
+    </div>
+    <!--全国同步课程开始-->
+    <div class="course" id="course">
+        <div class="container">
+            <div class="row">
+                <div class="col"><img src="__STATIC__/index/images/mobile/1.png" class="img-fluid"></div>
+            </div>
+            <br>
+            <!-- Nav pills -->
+            <ul class="nav nav-pills" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link " data-toggle="pill" href="#home">小学</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="pill" href="#menu1">初中</a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link" data-toggle="pill" href="#menu2">高中</a>
+                </li> -->
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <!--小学-->
+                <div id="home" class="container tab-pane fade"><br>
+                    <div class="row version">
+                        <div class="col-2 text-vc">教材版本:</div>
+                        <div class="col-10 ul-inline clear-padding-row ves">
+                            <div>
+                                <ul id="edition1">
+                                    {volist name="version" id="vo" key="index"}
+                                    <li data-id="{$vo.id}" class="{if ($index==1)}active{/if}">{$vo.name}</li>
+                                    {/volist}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row grade">
+                        <div class="col-2 text-vc">年级:</div>
+                        <div class="col-10 ul-inline clear-padding-row">
+                            <ul id="grade1">
+                                {volist name="grade1" id="vo" key="index"}
+                                <li data-id="{$vo.id}" class="{if ($index==1)}active{/if}">{$vo.name}</li>
+                                {/volist}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row subject">
+                        <div class="col-2 text-vc">科目:</div>
+                        <div class="col-10 ul-inline clear-padding-row">
+                            <ul id="subject1">
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row type">
+                        <div class="col-2 text-vc">分册:</div>
+                        <div class="col-10 ul-inline clear-padding-row">
+                            <ul id="type1">
+                                {volist name="term1" id="vo" key="index"}
+                                <li data-id="{$vo.id}" class="{if ($index==1)}active{/if}">{$vo.name}</li>
+                                {/volist}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row chapter">
+                        <div class="col-2 text-vc">章节:</div>
+                        <div class="col-10 ul-vertical clear-padding-row">
+                            <div class="content1">
+                                <div>
+                                    <ul id="chapter1">
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--初中-->
+                <div id="menu1" class="container tab-pane active"><br>
+                    <div class="row version">
+                        <div class="col-2 text-vc">教材:</div>
+                        <div class="col-10 ul-inline clear-padding-row ves">
+                            <div>
+                                <ul id="edition2">
+                                    {volist name="version" id="vo" key="index"}
+                                    <li data-id="{$vo.id}" class="{if ($index==1)}active{/if}">{$vo.name}</li>
+                                    {/volist}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row grade">
+                        <div class="col-2 text-vc">年级:</div>
+                        <div class="col-10 ul-inline clear-padding-row">
+                            <ul id="grade2">
+                                {volist name="grade2" id="vo" key="index"}
+                                <li data-id="{$vo.id}" class="{if ($index==1)}active{/if}">{$vo.name}</li>
+                                {/volist}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row subject">
+                        <div class="col-2 text-vc">科目:</div>
+                        <div class="col-10 ul-inline clear-padding-row">
+                            <ul id="subject2">
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row type">
+                        <div class="col-2 text-vc">分册:</div>
+                        <div class="col-10 ul-inline clear-padding-row">
+                            <ul id="type2">
+                                {volist name="term2" id="vo" key="index"}
+                                <li data-id="{$vo.id}" class="{if ($index==1)}active{/if}">{$vo.name}</li>
+                                {/volist}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row chapter">
+                        <div class="col-2 text-vc">章节:</div>
+                        <div class="col-10 ul-vertical clear-padding-row">
+                            <div class="content2">
+                                <div>
+                                    <ul id="chapter2">
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--高中-->
+                <!-- <div id="menu2" class="container tab-pane fade"><br>
+                    <div class="row version">
+                        <div class="col-2 text-vc">教材版本:</div>
+                        <div class="col-10 ul-inline clear-padding-row">
+                            <ul id="edition3">
+                                {volist name="version" id="vo"}
+                                    <li data-id="9-{$vo.id}">{$vo.name}</li>
+                                {/volist}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row grade">
+                        <div class="col-2 text-vc">年级:</div>
+                        <div class="col-10 ul-inline clear-padding-row">
+                            <ul id="grade3">
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row subject">
+                        <div class="col-2 text-vc">科目:</div>
+                        <div class="col-10 ul-inline clear-padding-row">
+                            <ul id="subject3">
+                                <li>语文</li>
+                                <li>数学</li>
+                                <li>英语</li>
+                                <li>物理</li>
+                                <li>化学</li>
+                                <li>政治</li>
+                                <li>历史</li>
+                                <li>地理</li>
+                                <li>人教版</li>
+                                <li>人教版</li>
+                                <li>人教版</li>
+                                <li>人教版</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row type">
+                        <div class="col-2 text-vc">分册:</div>
+                        <div class="col-10 ul-inline clear-padding-row">
+                            <ul id="type3">
+                                <li>上册</li>
+                                <li>下册</li>
+                                <li>全一册</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row chapter">
+                        <div class="col-2 text-vc">章节:</div>
+                        <div class="col-10 ul-vertical clear-padding-row" id="container">
+                            <ul class="scroll-pane" id="chapter3">
+                                <li>第一章</li>
+                                <li>第一章</li>
+                                <li>第一章</li>
+                                <li>第一章</li>
+                                <li>第一章</li>
+                                <li>第一章</li>
+                                <li>第一章</li>
+                                <li>第一章</li>
+                                <li>第一章</li>
+                                <li>第一章</li>
+                                <li>第一章</li>
+                                <li>第一章</li>
+                                <li>第一章</li>
+                                <li>第一章</li>
+                                <li>第一章</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    <!--全国同步课程结束-->
+
+    <!--课堂名师 start-->
+    <div class="teacher">
+        <div class="container">
+            <h2><img src="__STATIC__/index/images/mobile/3.png" class="img-fluid"></h2>
+            <br />
+            <div class="row">
+                {volist name="teacher" id="vo"}
+                <div class="col-12">
+                    <div class="card lx">
+                        <img class="card-img-top" src="{$vo.img}" alt="{$vo.name}" style="width:100%">
+                        <div class="card-body">
+                            <span class="ctag">{$vo.subject}</span>
+                            <div class="details">&nbsp;&nbsp;
+                                {$vo.remake}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/volist}
+                <div class="col-12">
+                    <span class="more">
+                        <a href="{:url('index/moreTeacher')}">查看更多</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--课堂名师 end-->
+
+    <!-- 东南亚留学 start -->
+    <div class="abroad">
+        <div class="container">
+            <h2><img src="__STATIC__/index/images/mobile/4.png" class="img-fluid"></h2>
+            <br>
+            <div class="row">
+                <div class="col">
+                    <div class="cap">
+                        <img src="__STATIC__/index/images/cap.png" class="img-fluid">
+                    </div>
+                    <div class="abroad-box" title="介绍">
+                        <span>泰国的国际学校在质量上名列前茅，提供支持性和鼓舞人心
+                            的环境而自豪，这种环境可以让每个学生都能够达到并超越他们的全部潜力。勤藤教育将为您提供最优质的服务，让您的孩子就读外海大学。得到人生重要礼物-价值观的养成。从小学到中学，无论是英制、美制、国际寄宿学校或是基督教教会学校，您会发现我们可以做的更好，让您的孩子顺利入学。
+                            幼儿园至小学：新加坡国际学校新机场校区（Singapore International School
+                            Suvarnabhumi）泰国的国际学校在质量上名列前茅，提供支持性和鼓舞人心的环境。</span>
+                    </div>
+                    <div class="plane">
+                        <img src="__STATIC__/index/images/plane.png" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 东南亚留学 end -->
+
+    <!-- 勤藤荣誉 start -->
+    <div class="honour">
+        <div class="container">
+            <h2><img src="__STATIC__/index/images/mobile/6.png" class="img-fluid"></h2>
+            <img src="__STATIC__/index/images/mobile/ry.png" class="img-fluid">
+        </div>
+    </div>
+    <!-- 勤藤荣誉 start -->
+
+    <!-- 勤藤优势 start -->
+    <div class="honour" style="margin-bottom: 80px">
+        <img src="__STATIC__/index/images/mobile/bottom.png" class="img-fluid">
+
+    </div>
+    <!-- 勤藤优势 start -->
+
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-3">
+                    <a href="{:url('index/index')}">
+                        <div class="fot-box actives">
+                            <i class="iconfont icon-shouye"></i>
+                            <span>首页</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-3">
+                    <a href="{:url('exam/index')}">
+                        <div class="fot-box">
+                            <i class="iconfont icon-xitiku"></i>
+                            <span>习题库</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-3">
+                    <a href="{:url('news/index')}">
+                        <div class="fot-box">
+                            <i class="iconfont icon-zixun"></i>
+                            <span>资讯</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-3">
+                    <a href="tel:0871-68186689">
+                        <div class="fot-box">
+                            <i class="iconfont icon-dianhua"></i>
+                            <span>电话</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="leftNav-item">
+        <ul>
+            <a href="{:url('contact/index')}">
+                <li>
+                    <i class="iconfont icon-yijianfankui"></i>
+                </li>
+            </a>
+            <li title="在线客服">
+                <i class="iconfont icon-zaixiankefux"></i>
+                <a href="javascript:void(0)" class="rota">在线客服</a>
+            </li>
+            <li title="返回顶部" class="for-top">
+                <i class="iconfont icon-dingbu"></i>
+                <a href="javascript:;" class="rota">去顶部</a>
+            </li>
+        </ul>
+    </div>
+
+    <script type="text/javascript" src="__STATIC__/index/js/nav2.js"></script>
+
+    <script>
+        var subject1 = $('#subject1') //小学科目
+        var subject2 = $('#subject2') //初中科目
+        //点击变色
+        $('.ul-inline ul').click(function (event) {
+            // console.log(event.target.nodeName)
+            if (event.target.nodeName == "LI") {
+                $(event.target).addClass('active')
+                $(event.target).siblings().removeClass('active')
+            }
+        })
+
+        //初始化数据
+        $(function () {
+            // var subject3 = $('#subject3')   //高中科目
+            //获取初一科目
+            getSubject({
+                grade: 7,
+                obj: subject2
+            })
+            //获取一年级科目
+            getSubject({
+                grade: 1,
+                obj: subject1
+            })
+            // //获取高一科目
+            // getSubject({grade:10,obj:subject3})
+            //获取默认初一章节
+            getChapter({
+                version: 1,
+                stage: 2,
+                grade: 7,
+                subject: 1,
+                term: 1,
+                obj: $('#chapter2')
+            })
+            //获取默认一年级章节
+            // getChapter({
+            //     version: 1,
+            //     stage: 1,
+            //     grade: 1,
+            //     subject: 1,
+            //     term: 1,
+            //     obj: $('#chapter1')
+            // })
+        })
+
+        //动态加载科目信息
+        // 初中
+        clickGetSubject({
+            obj: $('#grade2'),
+            subject: subject2
+        })
+        //小学
+        clickGetSubject({
+            obj: $('#grade1'),
+            subject: subject1
+        })
+
+
+        //动态加载章节信息
+        //点击教材版本
+        //初中
+        $('#edition2').click(function (event) {
+            let obj = $(event.target)
+            let nodeName = event.target.nodeName
+            clickGetChapter({
+                obj,
+                nodeName,
+                version: '',
+                stage: 2,
+                grade: $('#grade2 li'),
+                subject: $('#subject2 li'),
+                term: $('#type2 li')
+            })
+        })
+
+        //小学
+        $('#edition1').click(function (event) {
+            let obj = $(event.target)
+            let nodeName = event.target.nodeName
+            clickGetChapter({
+                obj,
+                nodeName,
+                version: '',
+                stage: 2,
+                grade: $('#grade1 li'),
+                subject: $('#subject1 li'),
+                term: $('#type1 li')
+            })
+        })
+
+
+        //点击年级
+        //初中
+        $('#grade2').click(function (event) {
+            let obj = $(event.target)
+            let nodeName = event.target.nodeName
+            clickGetChapter({
+                obj,
+                nodeName,
+                version: $('#edition2 li'),
+                stage: 2,
+                grade: '',
+                subject: $('#subject2 li'),
+                term: $('#type2 li')
+            })
+        })
+
+        //小学
+        $('#grade1').click(function (event) {
+            let obj = $(event.target)
+            let nodeName = event.target.nodeName
+            clickGetChapter({
+                obj,
+                nodeName,
+                version: $('#edition1 li'),
+                stage: 2,
+                grade: '',
+                subject: $('#subject1 li'),
+                term: $('#type1 li')
+            })
+        })
+
+
+        //点击科目
+        //初中
+        $('#subject2').click(function (event) {
+            let obj = $(event.target)
+            let nodeName = event.target.nodeName
+            clickGetChapter({
+                obj,
+                nodeName,
+                version: $('#edition2 li'),
+                stage: 2,
+                grade: $('#grade2 li'),
+                subject: '',
+                term: $('#type2 li')
+            })
+        })
+
+        //小学
+        $('#subject1').click(function (event) {
+            let obj = $(event.target)
+            let nodeName = event.target.nodeName
+            clickGetChapter({
+                obj,
+                nodeName,
+                version: $('#edition1 li'),
+                stage: 2,
+                grade: $('#grade1 li'),
+                subject: '',
+                term: $('#type1 li')
+            })
+        })
+
+
+
+        //点击分册
+        //初中
+        $('#type2').click(function (event) {
+            let obj = $(event.target)
+            let nodeName = event.target.nodeName
+            clickGetChapter({
+                obj,
+                nodeName,
+                version: $('#edition2 li'),
+                stage: 2,
+                grade: $('#grade2 li'),
+                subject: $('#subject2 li'),
+                term: ''
+            })
+        })
+
+        //小学
+        $('#type1').click(function (event) {
+            let obj = $(event.target)
+            let nodeName = event.target.nodeName
+            clickGetChapter({
+                obj,
+                nodeName,
+                version: $('#edition1 li'),
+                stage: 2,
+                grade: $('#grade1 li'),
+                subject: $('#subject1 li'),
+                term: ''
+            })
+        })
+
+
+
+        //点击章节后跳转
+        $('#chapter2').click(function (event) {
+            let flag = "{$status}"
+            let id
+            let vkn
+            let url
+            let timeout = '' //延迟时间
+            if (flag == 1) {
+                if (event.target.nodeName == 'LI') {
+                    id = $(event.target).data('id')
+                    vkn = $(event.target).data('kname')
+                    url = "{:url('video/index')}" + "?id=" + id + "&vkn=" + vkn
+                    // console.log(url)
+                }
+            } else {
+                message({
+                    icon: 'warning',
+                    content: '请登录！'
+                })
+                timeout = 1500
+                url = "{:url('login/index')}"
+            }
+            setTimeout(function () {
+                window.location.href = url
+            }, timeout)
+
+        })
+
+        // 获取科目函数
+        function getSubject({
+            grade,
+            obj
+        }) {
+            $.ajax({
+                type: 'get',
+                url: '{:url("index/getSubject")}',
+                data: {
+                    grade
+                },
+                dataType: 'json',
+                success: (res) => {
+                    let code = res.code
+                    let msg = res.msg
+                    if (code == 200) {
+                        let data = res.data
+                        let html = ''
+                        data.forEach((item) => {
+                            html += '<li data-id="' + item.id + '">' + item.name + '</li>'
+                        })
+                        obj.html(html)
+                        obj.children(':first').addClass('active')
+                    } else {
+                        message({
+                            icon: error,
+                            content: msg
+                        })
+                        obj.html('<li data-id="-1">未查询到相关信息</li>')
+                    }
+                }
+            })
+        }
+
+        //获取章节信息函数
+        function getChapter({
+            version,
+            stage,
+            grade,
+            subject,
+            term,
+            obj
+        }) {
+            $.ajax({
+                type: 'get',
+                url: '{:url("index/getChapter")}',
+                data: {
+                    version,
+                    stage,
+                    grade,
+                    subject,
+                    term
+                },
+                dataType: 'json',
+                success: (res) => {
+                    let code = res.code
+                    let msg = res.msg
+                    if (code == 200) {
+                        let data = res.data
+                        let html = ''
+                        data.forEach((item) => {
+                            html += '<li data-id="' + item.id + '" data-kname="' + item.vkname +
+                                '">' + item.name + '</li>'
+                        })
+                        obj.html(html)
+                        obj.children(':first').addClass('active')
+                    } else {
+                        message({
+                            icon: 'error',
+                            content: msg
+                        })
+                        obj.html('<li data-id="-1">未查询到相关信息</li>')
+                    }
+                }
+            })
+        }
+
+        //获取激活类对应值的函数
+        function getActive(obj) {
+            let data
+            obj.each(function () {
+                if ($(this).hasClass('active')) {
+                    data = $(this).data('id')
+                }
+            })
+            return data
+        }
+
+        // 点击获取科目函数
+        function clickGetSubject({
+            obj,
+            subject
+        }) {
+            obj.click(function (event) {
+                if (event.target.nodeName == "LI") {
+                    let grade = $(event.target).data('id')
+                    getSubject({
+                        grade,
+                        obj: subject
+                    })
+                }
+            })
+        }
+
+        //点击获取章节函数
+        function clickGetChapter({
+            obj,
+            nodeName,
+            version,
+            stage,
+            grade,
+            subject,
+            term
+        }) {
+            let versionID
+            let gradeID
+            let subjectID
+            let termID
+            let chapterObj
+            switch (stage) {
+                case 1:
+                    chapterObj = $('#chapter1')
+                    break;
+                case 2:
+                    chapterObj = $('#chapter2')
+                    break;
+                case 3:
+                    chapterObj = $('#chapter3')
+                    break;
+                default:
+                    break;
+            }
+            if (nodeName == "LI") {
+                if (version == '') {
+                    versionID = obj.data('id')
+                    gradeID = getActive(grade)
+                    subjectID = getActive(subject)
+                    termID = getActive(term)
+                }
+                if (grade == '') {
+                    versionID = getActive(version)
+                    gradeID = obj.data('id')
+                    subjectID = getActive(subject)
+                    termID = getActive(term)
+                }
+                if (subject == '') {
+                    versionID = getActive(version)
+                    gradeID = getActive(grade)
+                    subjectID = obj.data('id')
+                    termID = getActive(term)
+                }
+                if (term == '') {
+                    versionID = getActive(version)
+                    gradeID = getActive(grade)
+                    subjectID = getActive(subject)
+                    termID = obj.data('id')
+                }
+            }
+            // console.log(versionID,stage,gradeID,subjectID,termID)
+            getChapter({
+                version: versionID,
+                stage: stage,
+                grade: gradeID,
+                subject: subjectID,
+                term: termID,
+                obj: chapterObj
+            })
+        }
+    </script>
+    <script src="__STATIC__/index/js/modal_dialog.js"></script>
+    <!--底部轮播效果-->
+
+    <script src="__STATIC__/index/js/Carousel.js"></script>
+    <script>
+        //$(".poster-main").Carousel("init");
+
+        $(".poster-main").Carousel({
+            "width": 1200,
+            "height": 500,
+            "posterWidth": 800,
+            "posterHeight": 400,
+            "scale": 0.85,
+            "speed": 500,
+            "autoPlay": true,
+            "delay": 3000,
+            "verticalAlign": "middle"
+        });
+    </script>
+</body>
+
+</html>

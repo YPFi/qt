@@ -1,0 +1,92 @@
+<div style="background-color: white;">
+    <div class="container top" style="height:80px">
+        <div class="row">
+            <div class="col-4">
+                <img src="__STATIC__/index/images/logo.png" style="height:60px" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="header">
+    <div class="index-nav">
+        <div class="index-nav-frame clearfix">
+            <div class="nav-line">
+            </div>
+            <div class="nav-small" tabindex="-1">
+                <div class="nav-small-focus" tabindex="-1">
+
+                </div>
+                <img src="__STATIC__/index/images/icon.png" />
+            </div>
+            <div class="index-nav-frame-line theme-active" tabindex="-1">
+                <a href="{:url('index/index')}">首页</a>
+            </div>
+            <div class="index-nav-frame-line" tabindex="-1">
+                学习社区
+                <div class="index-nav-frame-line-center">
+                    <div class="index-nav-frame-line-li">
+                        <a href="{:url('textbook/index')}">同步教材</a>
+                    </div>
+                    <div class="index-nav-frame-line-li">
+                        <a href="{:url('exam/index')}">同步练习</a>
+                    </div>
+                </div>
+                <div class="index-nav-frame-line-focus" tabindex="-1"></div>
+            </div>
+            <div class="index-nav-frame-line" tabindex="-1">
+                <a href="{:url('news/index')}">资讯</a>
+            </div>
+            <div class="index-nav-frame-line" tabindex="-1">
+                <a href="{:url('recharge/index')}">充值</a>
+            </div>
+            <div class="index-nav-frame-line" tabindex="-1">
+                {empty name="Think.session.member"}
+                <a href="{:url('login/index')}">注册/登录</a>
+                {else /}
+                <a href="{:url('member/index')}">会员中心</a>
+                {/empty}
+            </div>
+            <div class="index-nav-frame-line" tabindex="-1">
+                联系我们
+                <div class="index-nav-frame-line-center">
+                    <div class="index-nav-frame-line-li">
+                        <a href="{:url('contact/index')}">意见反馈</a>
+                    </div>
+                    <div class="index-nav-frame-line-li">
+                        企业简介
+                    </div>
+                    <div class="index-nav-frame-line-li">
+                        申请合作
+                    </div>
+                </div>
+                <div class="index-nav-frame-line-focus" tabindex="-1"></div>
+            </div>
+            {notempty name="Think.session.member"}
+            <div class="index-nav-frame-line-right index-nav-frame-line" tabindex="-1">
+                {empty name="Think.session.member.head_img"}
+                <img src="/static/index/images/face_default.jpg">
+                {else /}
+                <img src="{$Think.session.member.head_img}">
+                {/empty}
+                {$Think.session.member.name|default="勤藤教育"}
+                <div class="logout">
+                    <a href="{:url('login/logout')}">退出登录</a>
+                </div>
+                <div class="index-nav-frame-line-focus" tabindex="-1"></div>
+            </div>
+            {/notempty}
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".logout").hide();
+    })
+    $('.index-nav-frame-line-right').mouseover(function(){
+        $(".logout").show();
+    });
+    $('.index-nav-frame-line-right').mouseout(function(){
+        $(".logout").hide();
+    });
+</script>

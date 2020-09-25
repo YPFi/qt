@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{$title}</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/header.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/style.css">
+    <link rel="stylesheet" href="__STATIC__/index/css/mobile/style.css" />
+    <link rel="stylesheet" href="__STATIC__/index/css/fonts.css" />
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/mobile/result.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+
+<body>
+    {include file="base/header"}
+    <div class="result-box">
+        <div class="user">
+            {empty name="Think.session.member.head_img"}
+            <img src="/static/index/images/face_default.jpg">
+            {else /}
+            <img src="{$Think.session.member.head_img}">
+            {/empty}
+            &nbsp;&nbsp;{$Think.session.member.name|default="勤藤教育"}
+        </div>
+        <div class="score box-bottom">
+            <i class="fa fa-trophy txt-success"></i>本次得分：<span  class="blue">{$score}分</span>
+        </div>
+        <div class="box-bottom">
+            <i class="fa fa-check-circle-o txt-success"></i>本次答对：<span class="blue">{$success}题</span>
+        </div>
+        <div class="box-bottom">
+            <i class="fa fa-times-circle txt-error"></i>本次答错：<span class="blue">{$error}题</span>
+        </div>
+        <div class="box-button">
+            <div class="button"><a href="{:url('exam/seeError')}?id={$errorList}" >查看错题</a></div>
+        </div>
+        <div class="box-button2">
+            <div class="button-big"><a href="{:url('exam/details')}?id={$next['id']}" >继续做题<br/><span>({$next['name']})</span></a></div>
+        </div>
+    </div>
+    {include file="base/footer"}
+</body>
+
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0 maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>会员中心</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/header.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/fonts.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/mobile/member-index.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/mobile/style.css">
+</head>
+
+<body>
+    <div class="head">
+        <div><i class="iconfont icon-saomiao"></i></div>
+        <div>个人中心</div>
+        <div><i class="iconfont icon-fenxiang"></i></div>
+    </div>
+    <div class="card">
+        <div class="card-box">
+            <div class="card-head">
+                <div class="head-img">
+                    {empty name="member['head_img']"}
+                    <img src="/static/index/images/face_default.jpg">
+                    {else /}
+                    <img src="{$member['head_img']}">
+                    {/empty}
+                </div>
+                <div class="head-info">
+                    <div class="info-name">{$member['name']|default="勤藤教育"}</div>
+                    <div class="info-sign">克勤之致，结青藤之缘</div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="qzt">
+                    <div class="num">
+                        <span>{$memberInfo['qzt']}</span>个
+                    </div>
+                    <div class="title">勤藤币</div>
+                </div>
+                <div class="qzt">
+                    <div class="num">
+                        <span>{$memberInfo['balance']}</span>元
+                    </div>
+                    <div class="title">账号余额</div>
+                </div>
+                <div class="qzt">
+                    <div class="num">
+                        <span>{$exam['SUM(wrong_number)']}</span>题
+                    </div>
+                    <div class="title">我的错题</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="break"></div>
+    <div class="navBar">
+        <ul>
+            <li class="navBox">
+                <a href="{:url('member/info')}" target="content">
+                    <img src="__STATIC__/index/images/icon/user-m.png" class="img-fluid">
+                </a>
+            </li>
+            <li class="navBox">
+                <a href="{:url('member/collect')}" target="content">
+                    <img src="__STATIC__/index/images/icon/collect-m.png" class="img-fluid">
+                </a>
+            </li>
+            <li class="navBox">
+                <a href="{:url('member/errorTotal')}" target="content">
+                    <img src="__STATIC__/index/images/icon/study-m.png" class="img-fluid">
+                </a>
+            </li>
+            <li class="navBox">
+                <a href="{:url('member/course')}" target="content">
+                    <img src="__STATIC__/index/images/icon/souce-m.png" class="img-fluid">
+                </a>
+            </li>
+            <li class="navBox">
+                <a href="{:url('member/feedback')}" target="content">
+                    <img src="__STATIC__/index/images/icon/remark-m.png" class="img-fluid">
+                </a>
+            </li>
+            <li class="navBox">
+                <a href="{:url('exam/errorBook')}" target="_blank">
+                    <img src="__STATIC__/index/images/icon/error-m.png" class="img-fluid">
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="user-details">
+        <iframe frameborder="0" scrolling="auto" id="content" name="content" src="{:url('member/home')}"></iframe>
+    </div>
+    <!-- 底部 -->
+    {include file="base/footer"}
+</body>
+
+</html>

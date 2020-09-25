@@ -1,0 +1,153 @@
+{extend name='admin@main'}
+
+{block name="button"}
+
+{if auth("exam/chapter/add")}
+<button data-modal='{:url("add")}' data-title="添加章节" class='layui-btn layui-btn-sm layui-btn-primary'>添加章节</button>
+{/if}
+
+{if auth("exam/chapter/remove")}
+<button data-action='{:url("remove")}' data-rule="id#{key}" class='layui-btn layui-btn-sm layui-btn-primary'>删除章节</button>
+{/if}
+
+{/block}
+
+{block name="content"}
+<div class="think-box-shadow">
+    {include file='chapter/search'}
+    <table class="layui-table margin-top-10" lay-skin="line">
+        {notempty name='list'}
+        <thead>
+        <tr>
+            <th class='list-table-check-td think-checkbox'>
+                <input data-auto-none data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class='text-center nowrap'>章节名称</th>
+            <th class='text-center nowrap'>教材版本</th>
+            <th class='text-center nowrap'>学段</th>
+            <th class='text-center nowrap'>年级</th>
+            <th class='text-center nowrap'>科目</th>
+            <th class='text-center nowrap'>分册</th>
+            <th class='text-center nowrap'>格灵播放码 </th>
+            <th class="text-center">状态</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        {/notempty}
+        <tbody>
+        {foreach $list as $key=>$vo}
+        <tr data-dbclick>
+            <td class='list-table-check-td think-checkbox'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class='text-center nowrap'>{$vo.name|default=''}</td>
+            <td class='text-center nowrap'>
+                {switch vo.version}
+                    {case 1 }人教版{/case}
+                    {case 2 }粤教版{/case}
+                    {case 3 }鲁教版{/case}
+                    {case 4 }沪教版{/case}
+                    {case 7 }苏教版{/case}
+                    {case 8 }浙教版{/case}
+                    {case 9 }北师大版{/case}
+                    {case 10 }牛津上海版{/case}
+                    {case 11 }华东师大版{/case}
+                    {case 12 }新世纪版{/case}
+                    {case 14 }沪科版{/case}
+                    {case 16 }外研版{/case}
+                    {case 18 }湘教版{/case}
+                    {case 19 }浙科版{/case}
+                    {case 20 }教科版{/case}
+                    {case 21 }鲁科版{/case}
+                    {case 22 }苏科版{/case}
+                    {case 23 }语文版{/case}
+                    {case 27 }北京版{/case}
+                    {case 30 }商务星球版{/case}
+                    {case 38 }译林版{/case}
+                    {case 57 }全国通用教材{/case}
+                    {default /}其他版本
+                {/switch}
+            </td>
+            <td class='text-center nowrap'>
+                {switch vo.stage}
+                    {case 1 }小学{/case}
+                    {case 2 }初中{/case}
+                    {case 3 }高中{/case}
+                {/switch}
+            </td>
+            <td class='text-center nowrap'>
+                {switch vo.grade}
+                    {case 1 }一年级{/case}
+                    {case 2 }二年级{/case}
+                    {case 3 }三年级{/case}
+                    {case 4 }四年级{/case}
+                    {case 5 }五年级{/case}
+                    {case 6 }六年级{/case}
+                    {case 7 }初一年级{/case}
+                    {case 8 }初二年级{/case}
+                    {case 9 }初三年级{/case}
+                    {case 10 }高一年级{/case}
+                    {case 11 }高二年级{/case}
+                    {case 12 }高三年级{/case}
+                {/switch}
+            </td>
+            <td class='text-center nowrap'>
+                {switch vo.subject}
+                    {case 1 }语文{/case}
+                    {case 2 }数学{/case}
+                    {case 3 }英语{/case}
+                    {case 4 }物理{/case}
+                    {case 5 }化学{/case}
+                    {case 6 }生物{/case}
+                    {case 7 }历史{/case}
+                    {case 8 }政治{/case}
+                    {case 9 }地理{/case}
+                    {case 11 }科学{/case}
+                    {case 12 }历史与社会{/case}
+                    {case 16 }美术{/case}
+                {/switch}
+            </td>
+            <td class='text-center nowrap'>
+                {switch vo.term}
+                    {case 1 }上册{/case}
+                    {case 2 }下册{/case}
+                    {case 3 }全一册{/case}
+                    {case 4 }拓展{/case}
+                    {case 5 }选修{/case}
+                    {case 6 }必修一{/case}
+                    {case 7 }必修二{/case}
+                    {case 8 }必修三{/case}
+                    {case 9 }必修四{/case}
+                    {case 10 }必修五{/case}
+                {/switch}
+            </td>
+            <td class='text-center nowrap'>{$vo.vkname|default=''}</td>
+            <td class='text-center nowrap'>
+                {eq name='vo.status' value='1'}启用{else}禁用{/eq}<br>
+            </td>
+            <td class='text-center nowrap'>
+
+                {if auth("exam/chapter/edit")}
+                <a data-dbclick data-title="编辑章节" class="layui-btn layui-btn-xs" data-modal='{:url("edit")}?id={$vo.id}'>编 辑</a>
+                {/if}
+
+                {if $vo.status eq 1 and auth("exam/chapter/forbid")}
+                <a class="layui-btn layui-btn-xs layui-btn-warm" data-action="{:url('forbid')}" data-value="id#{$vo.id};status#0">禁 用</a>
+                {elseif auth("store/chapter/resume")}
+                <a class="layui-btn layui-btn-xs layui-btn-warm" data-action="{:url('resume')}" data-value="id#{$vo.id};status#1">启 用</a>
+                {/if}
+
+                {if auth("exam/chapter/remove")}
+                <a class="layui-btn layui-btn-xs layui-btn-danger" data-confirm="确定要删除数据吗?" data-action="{:url('remove')}" data-value="id#{$vo.id}">删 除</a>
+                {/if}
+
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {empty name='list'}<span class="notdata">没有记录哦</span>{else}
+    {$pagehtml|raw|default=''}
+    {/empty}
+</div>
+{/block}

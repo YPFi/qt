@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{$title}</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/header.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/style.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/news/index.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/news/keyword.css">
+</head>
+
+<body>
+<!-- 头部 -->
+{include file="base/header"}
+
+<div class="key-box">
+    <div class="container">
+        <div class="row">
+            <div class="col"><h1>相关文章推荐</h1></div>
+        </div>
+        <div class="row">
+            {volist name='data' id='vo'}
+                <div class="col-12 box-details">
+                    <div class="content">
+                        <div class="title">{$vo.title}</div>
+                        <div class="time">
+                            <span class="glyphicon glyphicon-time text-dark"></span>&nbsp;<span id="time">{$vo.create_at}</span>
+                        </div>
+                        <div class="abstract">
+                            <a href="{:url('News/details')}?id={$vo.id}">{$vo.abstract}</a>
+                        </div>
+                        <div class="more"><a href="{:url('News/details')}?id={$vo.id}">查看详情》</a></div>
+                    </div>
+                    <div class="img">
+                        <img src="{$vo.img}" class="img-fluid">
+                    </div>
+                </div>
+            {/volist}
+        </div>
+        <div class="row">
+            <div class="col">
+                {$data|raw}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 底部 -->
+{include file="base/footer"}
+</body>
+
+</html>

@@ -1,0 +1,77 @@
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post" class='layui-form layui-card' autocomplete="off">
+
+    <div class="layui-card-body">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择模板类型</label>
+            <div class="layui-input-block">
+                <select name="type" required  id="type" lay-verify="required">
+                    <option value="">请选择模板类型</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">签名名称</label>
+            <div class="layui-input-block">
+                <input name="signName" readonly value='勤藤教育'  class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">模板名称</label>
+            <div class="layui-input-block">
+                <input name="templateCode" required value='{$vo.templateCode}'  class="layui-input">
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="hr-line-dashed"></div>
+    {notempty name='vo.id'}<input type='hidden' value='{$vo.id}' name='id'>{/notempty}
+
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+
+</form>
+
+<script>
+    layui.use(['form'], function() {
+        //获取模板类型类型
+        $.ajax({
+            type: 'get',
+            url: '{:url("api/getSmsType")}',
+            data: {},
+            dataType: 'json',
+            success: function (responce) {
+                let code = responce.code
+                let msg = responce.msg
+                let html = '<option value="">请选择模板类型</option>'
+                if(code == 200){
+                    for(let i in responce.data){
+                        let obj = responce.data[i]
+                        html += '<option value="'+obj.id+'">'+obj.name+'</option>'
+                    }
+                    $('#type').html(html)
+
+                    //设置选择值
+                    $('#type option').each(function () {
+                        var val = $(this).val();
+                        let isSelect = '{$vo.type|default=""}'
+                        if(val == isSelect){
+                            $(this).attr("selected", true);
+                        }
+                    })
+
+                    form.render('select')
+                }else {
+                    layer.msg(msg, {icon: 5})
+                }
+            }
+        })
+        form.render()
+    })
+</script>

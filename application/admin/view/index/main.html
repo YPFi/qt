@@ -1,0 +1,133 @@
+{extend name='main'}
+
+{block name='content'}
+
+<style>
+    .store-total-container {
+        font-size: 14px;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+    }
+
+    .store-total-container .store-total-icon {
+        top: 45%;
+        right: 8%;
+        font-size: 65px;
+        position: absolute;
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .store-total-container .store-total-item {
+        color: #fff;
+        line-height: 4em;
+        padding: 15px 25px;
+        position: relative;
+    }
+
+    .store-total-container .store-total-item > div:nth-child(2) {
+        font-size: 46px;
+        line-height: 46px;
+    }
+
+</style>
+
+<div class="think-box-shadow store-total-container notselect">
+    <div class="margin-bottom-15">会员数据</div>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-sm6 layui-col-md3">
+            <div class="store-total-item nowrap" style="background:linear-gradient(-125deg,#57bdbf,#2f9de2)">
+                <div>会员总量</div>
+                <div>663</div>
+                <div>当前会员总数量</div>
+            </div>
+            <i class="store-total-icon layui-icon layui-icon-template-1"></i>
+        </div>
+        <div class="layui-col-sm6 layui-col-md3">
+            <div class="store-total-item nowrap" style="background:linear-gradient(-125deg,#ff7d7d,#fb2c95)">
+                <div>超级VIP总量</div>
+                <div>334</div>
+                <div>当前超级VIP总数量</div>
+            </div>
+            <i class="store-total-icon layui-icon layui-icon-user"></i>
+        </div>
+        <div class="layui-col-sm6 layui-col-md3">
+            <div class="store-total-item nowrap" style="background:linear-gradient(-113deg,#c543d8,#925cc3)">
+                <div>普通VIP总量</div>
+                <div>148</div>
+                <div>当前普通VIP总数量</div>
+            </div>
+            <i class="store-total-icon layui-icon layui-icon-read"></i>
+        </div>
+        <div class="layui-col-sm6 layui-col-md3">
+            <div class="store-total-item nowrap" style="background:linear-gradient(-141deg,#ecca1b,#f39526)">
+                <div>普通用户</div>
+                <div>10</div>
+                <div>当前普通用户总数量</div>
+            </div>
+            <i class="store-total-icon layui-icon layui-icon-survey"></i>
+        </div>
+    </div>
+</div>
+
+<div class="think-box-shadow store-total-container">
+    <div class="margin-bottom-15">实时概况</div>
+    <div class="layui-row layui-col-space15">
+        <div id="pie" style="width: 600px;height:400px;float:left;margin-left: 100px"></div>
+        <div id="bar" style="width: 600px;height:400px;float:left"></div>
+    </div>
+</div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myPie = echarts.init(document.getElementById('pie'),'macarons');
+    var myBar = echarts.init(document.getElementById('bar'),'macarons');
+    myPie.setOption({
+        title: {
+            text: '会员比例'
+        },
+        series: [
+            {
+                name: '会员比例',
+                type: 'pie',    // 设置图表类型为饼图
+                radius: '80%',  // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
+                data: [          // 数据数组，name 为数据项名称，value 为数据项值
+                    {value: 334, name: '超级VIP'},
+                    {value: 148, name: '普通VIP'},
+                    {value: 10, name: '普通用户'},
+                    {value: 100, name: '体验用户'},
+                ]
+            }
+        ]
+    })
+
+    // 指定图表的配置项和数据
+    var option = {
+        legend: {},
+        tooltip: {},
+        title: {
+            text: '近三个月会员详情'
+        },
+        dataset: {
+            // 提供一份数据。
+            source: [
+                ['product', '超级VIP', '普通VIP', '普通用户', '体验用户'],
+                ['2020-4', 43.3, 85.8, 93.7,88],
+                ['2020-5', 83.1, 73.4, 55.1,86],
+                ['2020-6', 86.4, 65.2, 82.5,66],
+            ]
+        },
+        // 声明一个 X 轴，类目轴（category）。默认情况下，类目轴对应到 dataset 第一列。
+        xAxis: {type: 'category'},
+        // 声明一个 Y 轴，数值轴。
+        yAxis: {},
+        // 声明多个 bar 系列，默认情况下，每个系列会自动对应到 dataset 的每一列。
+        series: [
+            {type: 'bar'},
+            {type: 'bar'},
+            {type: 'bar'}
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myBar.setOption(option);
+</script>
+{/block}

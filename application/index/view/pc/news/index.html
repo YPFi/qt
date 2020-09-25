@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{$title}</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/header.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/style.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/index/css/news/index.css">
+</head>
+
+<body>
+    <!-- 头部 -->
+    {include file="base/header"}
+    <div class="top-title">
+        <img src="__STATIC__/index/images/news-title.png" class="img-fluid">
+    </div>
+    <div class="news-box">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="box-nav">
+                        <dl class="navTab active" data-id="1">教育资讯</dl>
+                        <dl class="navTab" data-id="2">行业动态</dl>
+                        <dl class="navTab" data-id="3">热门资讯</dl>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="newsTable">
+
+            </div>
+            <div class="row page">
+                <input type="hidden" id="type" value="1">
+                <div class="col">
+                    <ul class="pagination pagination-sm">
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 底部 -->
+    {include file="base/footer"}
+
+    <script>
+        $(function () {
+            //初始化隐藏
+            $('#trade').hide()
+            $('#edu').hide()
+            $('.box-nav').click(function (event) {
+                if (event.target.nodeName == 'DL') {
+                    $(event.target).addClass('active')
+                    $(event.target).siblings().removeClass('active') //移除兄弟节点激活属性
+                    let id = $(event.target).data('id')
+                    $('#type').val(id)
+                    getActicle(id)
+                    // console.log(id)
+                }
+            })
+
+            //获取数据
+            getActicle(1)
+        })
+    </script>
+
+     <!-- 分页-->
+     <script>
+        function page(current) {
+            let type = $('#type').val()
+            $.ajax({
+                type: 'get',
+                url: '{:url("news/getArticle")}',
+                data: {type,current},
+                dataType: 'json',
+                success: (res)=>{
+                    // console.log(res)
+                    let code = res.code
+                    let msg = res.msg
+                    if(code == 200){
+                        let data = res.data
+                        // console.log(data)
+                        let list = data.list
+                        pageList(list,current)
+                        acticleData({data:data.data,obj:$('#newsTable')})
+                    }
+                }
+            })
+        }
+
+        //上一页
+        function prev() {
+            let current=-1
+            $('.pagination li').each((index,item)=>{
+                if ($(item).hasClass('active')){
+                    current = $(item).data('id')-1
+                }
+            })
+
+            if(current > 0){
+                page(current)
+            }
+        }
+
+        //下一页
+        function next() {
+            let current=-1
+            $('.pagination li').each((index,item)=>{ //0 1
+                if ($(item).hasClass('active')){
+                    current = $(item).data('id')+1
+                    if (current>index+1){
+                        current = -1    //下一页不存在
+                    }
+                }
+            })
+            if(current > 0){
+                page(current)
+            }
+        }
+
+        //分页数据函数
+         function pageList(list,current) {
+             let page_active = ''
+             let start
+             let end
+             if (current > list) {
+                 current = list;
+             }
+             if (current < 1) {
+                 current = 1;
+             }
+             if (list <= 6) {
+                 start = 1;
+                 end = list;
+             } else {
+                 //当前页码与总页数相差1个的时候，要显示之前的页码
+                 if (list - current < 2) {
+                     start = list - 5;
+                     end = list;
+                 } else {
+                     //显示前面三个和后面三个
+                     start = current - 3;
+                     if (start <= 0){
+                         start = 1
+                         end = start + 5;
+                     }else {
+                         end = current + 2;
+                     }
+
+                 }
+             }
+             for (let i =start;i<=end;i++){
+                 if(i == current){
+                     page_active += `<li class="page-item active" data-id="${i}" onclick="page(${i})"><a class="page-link">${i}</a></li>`
+                 }else {
+                     page_active += `<li class="page-item" data-id="${i}" onclick="page(${i})"><a class="page-link">${i}</a></li>`
+                 }
+             }
+             let page = `<li class="page-item"><a class="page-link" onclick="prev()">上一页</a></li>
+                            ${page_active}<li class="page-item"><a class="page-link" onclick="next()">下一页</a></li>
+                        <li class="page-item"><a class="page-link page-end">共计${list}页</a></li>`
+             $('.pagination').html(page)     //分页
+         }
+
+         //获取文章数据函数
+         function getActicle(type) {
+             $.ajax({
+                 type: 'get',
+                 url: '{:url("news/getArticle")}',
+                 data: {type,current: 1},
+                 dataType: 'json',
+                 success: (res)=>{
+                     let code = res.code
+                     let msg = res.msg
+                     if(code == 200){
+                         let data = res.data
+                         // console.log(data)
+                         let list = data.list
+                         pageList(list,1)    //分页数据
+                         acticleData({data:data.data,obj:$('#newsTable')})   //文章列表数据
+                     }
+                 }
+             })
+         }
+
+         //文章数据写入函数
+         function acticleData({data,obj}) {
+
+             let html='' //页面内容
+             data.forEach((item)=>{
+                 html += `<div class="col-12 box-details">
+                            <div class="content">
+                               <div class="title">${item.title}</div>
+                               <div class="time">
+                                  <span class="glyphicon glyphicon-time text-dark"></span>&nbsp;<span id="time">${item.create_at}</span>
+                               </div>
+                               <div class="abstract">
+                                  <a href="{:url('News/details')}?id=${item.id}">${item.abstract}</a>
+                               </div>
+                               <div class="more"><a href="{:url('News/details')}?id=${item.id}">查看详情》</a></div>
+                            </div>
+                            <div class="img">
+                               <img src="${item.img}" class="img-fluid">
+                            </div>
+                          </div>`
+             })
+             obj.html(html)
+         }
+    </script>
+</body>
+
+</html>

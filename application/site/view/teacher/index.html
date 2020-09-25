@@ -1,0 +1,112 @@
+{extend name='admin@main'}
+
+{block name="button"}
+
+{if auth("exam/teacher/add")}
+<button data-modal='{:url("add")}' data-title="添加老师" class='layui-btn layui-btn-sm layui-btn-primary'>添加老师</button>
+{/if}
+
+{if auth("exam/teacher/remove")}
+<button data-action='{:url("remove")}' data-rule="id#{key}" class='layui-btn layui-btn-sm layui-btn-primary'>删除老师</button>
+{/if}
+
+{/block}
+
+{block name="content"}
+<div class="think-box-shadow">
+    {include file='teacher/search'}
+    <table class="layui-table margin-top-10" lay-skin="line">
+        {notempty name='list'}
+        <thead>
+        <tr>
+            <th class='list-table-check-td think-checkbox'>
+                <input data-auto-none data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class='text-center nowrap'>老师名称</th>
+            <th class='text-center nowrap'>学段</th>
+            <th class='text-center nowrap'>年级</th>
+            <th class='text-center nowrap'>科目</th>
+            <th class='text-center nowrap'>介绍图</th>
+            <th class='text-center nowrap'>创建时间</th>
+            <th class="text-center">状态</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        {/notempty}
+        <tbody>
+        {foreach $list as $key=>$vo}
+        <tr data-dbclick>
+            <td class='list-table-check-td think-checkbox'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class='text-center nowrap'>{$vo.name}</td>
+            <td class='text-center nowrap'>
+                {switch vo.stage}
+                {case 1 }小学{/case}
+                {case 2 }初中{/case}
+                {case 3 }高中{/case}
+                {/switch}
+            </td>
+            <td class='text-center nowrap'>
+                {switch vo.grade}
+                {case 1 }一年级{/case}
+                {case 2 }二年级{/case}
+                {case 3 }三年级{/case}
+                {case 4 }四年级{/case}
+                {case 5 }五年级{/case}
+                {case 6 }六年级{/case}
+                {case 7 }初一年级{/case}
+                {case 8 }初二年级{/case}
+                {case 9 }初三年级{/case}
+                {case 10 }高一年级{/case}
+                {case 11 }高二年级{/case}
+                {case 12 }高三年级{/case}
+                {/switch}
+            </td>
+            <td class='text-center nowrap'>
+                {switch vo.subject}
+                {case 1 }语文{/case}
+                {case 2 }数学{/case}
+                {case 3 }英语{/case}
+                {case 4 }物理{/case}
+                {case 5 }化学{/case}
+                {case 6 }生物{/case}
+                {case 7 }历史{/case}
+                {case 8 }政治{/case}
+                {case 9 }地理{/case}
+                {case 11 }科学{/case}
+                {case 12 }历史与社会{/case}
+                {case 16 }美术{/case}
+                {/switch}
+            </td>
+            <td class='text-center nowrap'><img src="{$vo.img}" style="width: 90px;height: 50px"></td>
+            <td class='text-center nowrap'>{$vo.create_at|format_datetime}</td>
+            <td class='text-center nowrap'>
+                {eq name='vo.status' value='1'}<span class="layui-badge layui-bg-green">启用</span>{else}<span class="layui-badge">禁用</span>{/eq}<br>
+            </td>
+            <td class='text-center nowrap'>
+
+                {if auth("exam/teacher/edit")}
+                <a data-dbclick data-title="编辑老师" class="layui-btn layui-btn-xs" data-modal='{:url("edit")}?id={$vo.id}'>编 辑</a>
+                {/if}
+
+                {if $vo.status eq 1 and auth("exam/teacher/forbid")}
+                <a class="layui-btn layui-btn-xs layui-btn-warm" data-action="{:url('forbid')}" data-value="id#{$vo.id};status#0">禁 用</a>
+                {elseif auth("store/teacher/resume")}
+                <a class="layui-btn layui-btn-xs layui-btn-warm" data-action="{:url('resume')}" data-value="id#{$vo.id};status#1">启 用</a>
+                {/if}
+
+                {if auth("exam/teacher/remove")}
+                <a class="layui-btn layui-btn-xs layui-btn-danger" data-confirm="确定要删除数据吗?" data-action="{:url('remove')}" data-value="id#{$vo.id}">删 除</a>
+                {/if}
+
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {empty name='list'}<span class="notdata">没有记录哦</span>{else}
+    {$pagehtml|raw|default=''}
+    {/empty}
+</div>
+{/block}

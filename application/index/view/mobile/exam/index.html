@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{$title}</title>
+    <script src="__LIB__/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__LIB__/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="__LIB__/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="__STATIC__/index/css/mobile/exam-index.css" />
+    <link rel="stylesheet" href="__STATIC__/index/css/mobile/style.css" />
+    <link rel="stylesheet" href="__STATIC__/index/css/fonts.css" />
+    <link rel="stylesheet" href="__STATIC__/index/css/exam/radio.css" />
+</head>
+
+<body>
+    <!-- 头部 -->
+    {include file="base/header"}
+    <div class="top-title">
+        <img src="__STATIC__/index/images/exam.png" class="img-fluid">
+    </div>
+
+    <div class="exam-box">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="right-form">
+                        <form action="" method="POST" onsubmit = "return false">
+                            <div class="form-box">
+                                <div class="box-left">
+                                    <img src="__STATIC__/index/images/icon/version.png">
+                                </div>
+                                <div class="box-right">
+                                    <select name="version">
+                                        <option value="57" selected>全国通用版</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-box">
+                                <div class="box-left">
+                                    <img src="__STATIC__/index/images/icon/grade.png">
+                                </div>
+                                <div class="box-right">
+                                    <select name="grade" id="grade">
+                                        <option value="">请选择年级</option>
+                                        {volist name="grade" id="vo"}
+                                            <option value="{$vo.id}">{$vo.name}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-box">
+                                <div class="box-left">
+                                    <img src="__STATIC__/index/images/icon/subject.png">
+                                </div>
+                                <div class="box-right">
+                                    <select name="subject" id="subject">
+                                        <option value="" selected>请选择科目</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-box">
+                                <div class="box-left">
+                                    <img src="__STATIC__/index/images/icon/term.png">
+                                </div>
+                                <div class="box-right">
+                                    <select name="term" id="term">
+                                        <option value="" selected>请选择分册</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-box">
+                                <div class="box-left">
+                                    <img src="__STATIC__/index/images/icon/chapter.png">
+                                </div>
+                                <div class="box-right">
+                                    <select name="chapter" id="chapter">
+                                        <option value="" selected>请选择章节</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="button">
+                                <div class="button-hide">
+                                    <button type="submit" onclick="check()"></button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部 -->
+    {include file="base/footer"}
+    <script src="__STATIC__/index/js/modal_dialog.js"></script>
+    <script>
+        //初始化
+        $(function(){
+            let grade = $("#grade").val()
+            if(grade != ''){
+                getSubject(grade) 
+            }
+
+            
+        })
+
+        //检查权限
+        function check(){
+            let chapter = $('#chapter').val()
+            if(chapter == ''){
+                message({icon:'error',content:'请选择章节'})
+            }else {
+                $.ajax({
+                    type: 'get',
+                    url: '{:url("auth/checkMember")}',
+                    data: {chapter},
+                    dataType: 'json',
+                    success: (res)=>{
+                        let code = res.code
+                        let msg = res.msg
+                        console.log(code)
+                        if(code == 200){
+                            window.location.href = `{:url("exam/details")}?id=${chapter}`
+                        }else {
+                            message({icon:'error',content:msg,timeout:3000})
+                        }
+                    }
+                })
+            }
+            return false
+        }
+
+
+        //获取科目信息
+        $('#grade').change(function(){
+            let grade = $(this).val()
+            getSubject(grade)
+        })
+
+        //获取分册信息
+        $('#subject').change(function(){
+            let subject = $(this).val()
+            getTerm(subject)
+        })
+
+        //获取章节信息
+        $('#term').click(function(){
+            let term = $(this).val()
+            let grade = $('#grade').val()
+            let subject = $('#subject').val()
+            if(grade== ''){
+                message({icon:'error',content:'请选择年级'})
+            }else if (subject == ''){
+                message({icon:'error',content:'请选择科目'})
+            }else if (term == ''){
+                
+            }else{
+                $.ajax({
+                    type: 'get',
+                    url: '{:url("exam/getExamChapter")}',
+                    data: {grade,subject,term},
+                    dataType: 'json',
+                    success: (res)=>{
+                        let code = res.code
+                        let msg = res.msg
+                        if(code == 200){
+                            let data = res.data
+                            let html = ''
+                            data.forEach((item)=>{
+                                html += `<option value="${item.id}">${item.name}</option>`
+                            })
+                            $('#chapter').html(html)
+                        }else{
+                            message({icon:'error',content:msg})
+                        }
+                    }
+                })
+            }
+        })
+    
+        //获取科目函数
+        function getSubject(grade){
+            $.ajax({
+                type: 'get',
+                url: '{:url("exam/getSubject")}',
+                data: {grade},
+                dataType: 'json',
+                success: (res)=>{
+                    let code = res.code
+                    let msg = res.msg
+                    if(code == 200){
+                        let data = res.data
+                        let html = '<option value="">请选择科目</option>'
+                        data.forEach((item)=>{
+                            html += `<option value="${item.id}">${item.name}</option>`
+                        })
+                        $('#subject').html(html)
+                    }else{
+                        message({icon:'error',content:msg})
+                    }            
+                }
+            })
+        }
+
+        //获取分册函数
+        function getTerm(subject){
+            $.ajax({
+                type: 'get',
+                url: '{:url("exam/getTerm")}',
+                data: {subject},
+                dataType: 'json',
+                success: (res)=>{
+                    let code = res.code
+                    let msg = res.msg
+                    if(code == 200){
+                        let data = res.data
+                        let html = '<option value="">请选择分册</option>'
+                        data.forEach((item)=>{
+                            html += `<option value="${item.id}">${item.name}</option>`
+                        })
+                        $('#term').html(html)
+                    }else{
+                        message({icon:'error',content:msg})
+                    }            
+                }
+            })
+        }
+    
+    </script>
+</body>
+
+</html>

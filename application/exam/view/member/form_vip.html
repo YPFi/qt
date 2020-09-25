@@ -1,0 +1,71 @@
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post" class='layui-form layui-card' autocomplete="off">
+
+    <div class="layui-card-body">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">VIP名称</label>
+            <div class="layui-input-block">
+                <input name="name" required value='{$vo.name|default=""}' placeholder="请输入VIP名称" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">编码</label>
+            <div class="layui-input-block">
+                <input name="code" required value='{$vo.code|default=""}' placeholder="请输入VIP编码" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">金额</label>
+            <div class="layui-input-block">
+                <input name="money" lay-verify="required|number" required value='{$vo.money|default=""}' placeholder="请输入金额" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea" name="remark">{$vo.remark|default=''}</textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input name="create_at" type="hidden" id="time" value='' >
+            </div>
+        </div>
+
+    </div>
+
+    <div class="hr-line-dashed"></div>
+    {notempty name='vo.id'}<input type='hidden' value='{$vo.id}' name='id'>{/notempty}
+
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+
+    <script>
+        layui.use('form', function(){
+            var form = layui.form;
+            var date = new Date(new Date().getTime() + (1000 * 60 * 60 * 72));
+            var date_str = fortime(date);
+            $('#time').val(date_str);
+        });
+
+        function add(m){
+            return m<10?'0'+m:m
+        }
+
+        function fortime(date){
+            var y = date.getFullYear();
+            var m = date.getMonth()+1;
+            var d = date.getDate();
+            var h = date.getHours();
+            var mm = date.getMinutes();
+            var s = date.getSeconds();
+            return(y+'-'+add(m)+'-'+add(d)+' '+add(h)+':'+add(mm)+':'+add(s));
+        }
+    </script>
+</form>
